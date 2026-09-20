@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificado & QR Code — VE Consciente</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <!-- QR Code library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+
+<header class="site-header" id="site-header"></header>
+<div class="progress-nav" id="progress-nav"></div>
+
+<main class="main-content">
+
+  <div class="section-title text-center">🎓 Etapa 4 — Certificado de Conscientização</div>
+  <div class="section-desc text-center">Parabéns por concluir o programa! Seu certificado digital com QR Code foi gerado. Apresente-o ao DETRAN quando solicitado.</div>
+
+  <!-- CERTIFICADO -->
+  <div class="certificate-wrapper" id="certificate-wrapper">
+    <div class="certificate-inner" id="certificate-print">
+      <div class="certificate-seal">🏅</div>
+      <div class="certificate-title">Certificado de Conscientização</div>
+      <div class="certificate-subtitle">Veículos Elétricos de Micromobilidade — Campo Mourão - PR</div>
+
+      <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px;">Certificamos que</div>
+      <div class="certificate-name" id="cert-nome">—</div>
+
+      <div class="certificate-info-row" id="cert-info-row">
+        <span>CPF: <strong id="cert-cpf">—</strong></span>
+        <span>Veículo: <strong id="cert-veiculo">—</strong></span>
+        <span>Cor: <strong id="cert-cor">—</strong></span>
+      </div>
+
+      <div style="font-size:0.88rem; color:var(--text-secondary); margin: 12px 0 8px;">
+        concluiu com aprovação o <strong>Programa de Conscientização para Condutores de Veículos Elétricos</strong>
+        da Prefeitura Municipal de Campo Mourão em parceria com o DETRAN-PR.
+      </div>
+
+      <!-- STATUS DESBLOQUEIO -->
+      <div id="cert-status-desbloqueio" style="margin: 12px 0;"></div>
+
+      <div class="certificate-id" id="cert-id">CMO-2026-00000</div>
+
+      <div id="qrcode-container"></div>
+
+      <div class="certificate-validity">
+        Emitido em: <span id="cert-emissao">—</span> &nbsp;|&nbsp; 
+        Válido até: <span id="cert-validade">—</span>
+      </div>
+
+      <hr class="divider" style="margin: 20px 0;" />
+
+      <div style="display:flex; justify-content:space-around; flex-wrap:wrap; gap:16px; font-size:0.8rem; color:var(--text-muted);">
+        <div style="text-align:center;">
+          <div style="font-size:1.5rem; margin-bottom:4px;">🏛️</div>
+          <div><strong>Prefeitura Municipal</strong></div>
+          <div>Campo Mourão - PR</div>
+        </div>
+        <div style="text-align:center; font-size:0.72rem; color:var(--text-muted); max-width:260px;">
+          <p>Verifique a autenticidade deste certificado escaneando o QR Code acima ou acessando o painel DETRAN no site oficial.</p>
+          <p style="margin-top:4px; font-style:italic;">Este certificado tem validade de 1 (um) ano a partir da data de emissão.</p>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:1.5rem; margin-bottom:4px;">🚔</div>
+          <div><strong>DETRAN-PR</strong></div>
+          <div>Departamento de Trânsito</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AÇÕES -->
+  <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-bottom:32px;">
+    <button class="btn btn-primary" onclick="printCertificate()">🖨️ Imprimir / Salvar PDF</button>
+    <button class="btn btn-outline" id="btn-share" style="display:none;">📤 Compartilhar</button>
+    <a href="index.html" class="btn btn-outline">🏠 Voltar ao Início</a>
+  </div>
+
+  <!-- BENEFÍCIOS -->
+  <div class="card mb-24">
+    <div class="card-title">🎁 Seus Benefícios com o QR Code</div>
+    <div class="card-subtitle">Apresente seu certificado e aproveite as vantagens para condutores conscientizados.</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+      <div class="info-box green">
+        <span style="font-size:1.4rem;">🚔</span>
+        <div>
+          <strong>Reconhecimento pelo DETRAN</strong><br>
+          <span>Comprovação imediata de conscientização em abordagens.</span>
+        </div>
+      </div>
+      <div class="info-box blue">
+        <span style="font-size:1.4rem;">🏪</span>
+        <div>
+          <strong>Descontos em Parceiros</strong><br>
+          <span>Lojas de acessórios e manutenção em Campo Mourão com condições especiais.</span>
+        </div>
+      </div>
+      <div class="info-box green">
+        <span style="font-size:1.4rem;">⚡</span>
+        <div>
+          <strong>Pontos de Recarga</strong><br>
+          <span>Acesso prioritário à rede pública de pontos de recarga (em implantação).</span>
+        </div>
+      </div>
+      <div class="info-box blue">
+        <span style="font-size:1.4rem;">🏛️</span>
+        <div>
+          <strong>Atendimento Preferencial</strong><br>
+          <span>Filas preferenciais em serviços municipais relacionados ao VE.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORIENTAÇÕES FINAIS -->
+  <div class="card">
+    <div class="card-title">📌 Orientações Importantes</div>
+    <ul class="tutorial-checklist">
+      <li>Salve ou imprima este certificado e <strong>mantenha-o sempre acessível</strong> (no celular ou impresso).</li>
+      <li>O QR Code contém todas as informações do seu cadastro e poderá ser escaneado pelo DETRAN em abordagens.</li>
+      <li>O certificado tem <strong>validade de 1 ano</strong>. Após esse período, você precisará renová-lo.</li>
+      <li>Se o seu veículo for modificado ou você adquirir um novo, <strong>atualize seu cadastro</strong> fazendo um novo cadastramento.</li>
+      <li>Lembre-se: o certificado comprova sua conscientização, mas <strong>não substitui outras obrigações legais</strong>.</li>
+      <li>Em caso de dúvidas, procure o DETRAN de Campo Mourão ou a Prefeitura Municipal.</li>
+    </ul>
+  </div>
+
+</main>
+
+<footer class="site-footer" id="site-footer"></footer>
+
+<script type="module">
+import {
+  renderHeader, renderFooter, renderProgressBar,
+  getSession, clearSession, generateId, saveCondutor, showToast
+} from './assets/js/app.js';
+
+renderHeader();
+renderFooter();
+renderProgressBar(4);
+
+const session = getSession();
+
+if (!session.nome || !session.quizAprovado) {
+  showToast('Complete todas as etapas antes de obter o certificado.', 'error');
+  setTimeout(() => window.location.href = 'index.html', 2000);
+}
+
+// Gera ID se ainda não existir na sessão
+let certId = session.certId;
+let condutor = null;
+
+if (!certId) {
+  certId = generateId();
+
+  const now = new Date();
+  const validity = new Date(now);
+  validity.setFullYear(validity.getFullYear() + 1);
+
+  condutor = {
+    id: certId,
+    nome: session.nome,
+    cpf: session.cpf,
+    nascimento: session.nascimento,
+    telefone: session.telefone,
+    email: session.email,
+    tipoVeiculo: session.tipoVeiculo,
+    modeloVeiculo: session.modeloVeiculo,
+    cor: session.cor,
+    numSerie: session.numSerie || '',
+    velMax: session.velMax,
+    desbloqueado: session.desbloqueado || false,
+    dataConclusao: now.toISOString(),
+    dataValidade: validity.toISOString(),
+    quizScore: session.quizScore,
+    status: 'VALIDO'
+  };
+
+  saveCondutor(condutor);
+
+  // Persiste o ID na sessão para não gerar duplicados em F5
+  const { updateSession } = await import('./assets/js/app.js');
+  await updateSession({ certId });
+} else {
+  // Já emitido — carrega do banco
+  const { getCondutor } = await import('./assets/js/app.js');
+  condutor = getCondutor(certId);
+}
+
+// Preenche certificado
+document.getElementById('cert-nome').textContent = condutor.nome;
+document.getElementById('cert-cpf').textContent = maskCPFDisplay(condutor.cpf);
+document.getElementById('cert-veiculo').textContent =
+  `${tipoLabel(condutor.tipoVeiculo)} — ${condutor.modeloVeiculo}`;
+document.getElementById('cert-cor').textContent = condutor.cor;
+document.getElementById('cert-id').textContent = certId;
+
+const emissao = new Date(condutor.dataConclusao);
+const validade = new Date(condutor.dataValidade);
+document.getElementById('cert-emissao').textContent = emissao.toLocaleDateString('pt-BR');
+document.getElementById('cert-validade').textContent = validade.toLocaleDateString('pt-BR');
+
+// Status desbloqueio
+const statusEl = document.getElementById('cert-status-desbloqueio');
+if (condutor.desbloqueado) {
+  statusEl.innerHTML = `<span class="status-badge desbloqueado" style="margin:0 auto; display:inline-flex;">⚠️ VEÍCULO DECLARADO COMO DESBLOQUEADO</span>`;
+} else {
+  statusEl.innerHTML = `<span class="status-badge regular" style="margin:0 auto; display:inline-flex;">✅ VEÍCULO REGULAR (≤ 32 km/h)</span>`;
+}
+
+// Gera QR Code — encode o certId + URL para verificação
+const qrData = JSON.stringify({
+  id: certId,
+  nome: condutor.nome,
+  cpf: condutor.cpf,
+  veiculo: condutor.modeloVeiculo,
+  velMax: condutor.velMax,
+  desbloqueado: condutor.desbloqueado,
+  validade: condutor.dataValidade,
+  status: condutor.status
+});
+
+if (typeof QRCode !== 'undefined') {
+  QRCode.toCanvas(document.createElement('canvas'), qrData, { width: 200, margin: 2 }, function(err, canvas) {
+    if (!err) {
+      canvas.style.borderRadius = '8px';
+      document.getElementById('qrcode-container').appendChild(canvas);
+    } else {
+      document.getElementById('qrcode-container').innerHTML = '<p style="color:red; font-size:0.8rem;">Erro ao gerar QR Code. Recarregue a página.</p>';
+    }
+  });
+} else {
+  setTimeout(() => {
+    QRCode.toCanvas(document.createElement('canvas'), qrData, { width: 200, margin: 2 }, function(err, canvas) {
+      if (!err) document.getElementById('qrcode-container').appendChild(canvas);
+    });
+  }, 500);
+}
+
+// Compartilhar (Web Share API)
+if (navigator.share) {
+  document.getElementById('btn-share').style.display = 'inline-flex';
+  document.getElementById('btn-share').addEventListener('click', async () => {
+    try {
+      await navigator.share({
+        title: 'VE Consciente — Meu Certificado',
+        text: `${condutor.nome} concluiu o Programa de Conscientização de Veículos Elétricos de Campo Mourão! Certificado: ${certId}`,
+        url: window.location.href
+      });
+    } catch {}
+  });
+}
+
+// Helpers
+function maskCPFDisplay(cpf) {
+  const c = cpf.replace(/\D/g, '');
+  return c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+}
+
+function tipoLabel(tipo) {
+  const labels = {
+    patinete: 'Patinete Elétrico',
+    bicicleta: 'Bicicleta Elétrica',
+    monociclo: 'Monociclo Elétrico',
+    triciclo: 'Triciclo Elétrico',
+    outro: 'VE'
+  };
+  return labels[tipo] || tipo;
+}
+
+window.printCertificate = function() {
+  window.print();
+};
+</script>
+
+<style>
+@media print {
+  body * { visibility: hidden; }
+  #certificate-wrapper, #certificate-wrapper * { visibility: visible; }
+  #certificate-wrapper { position: fixed; top: 0; left: 0; width: 100%; }
+}
+</style>
+</body>
+</html>
