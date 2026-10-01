@@ -357,11 +357,11 @@ export function renderHeader(activePage = '') {
 
   el.innerHTML = `
     <div class="header-container">
-      <a href="/" class="brand-logo" aria-label="Página Inicial do SS">
+      <a href="/" class="brand-logo" aria-label="SS Sustentabilidade & Segurança">
         <div class="brand-emblem">SS</div>
         <div class="brand-info">
           <div class="brand-title"><span class="s1">Sustentabilidade</span> & <span class="s2">Segurança</span></div>
-          <div class="brand-subtitle">Plataforma Educacional e de Identificação</div>
+          <div class="brand-subtitle">Educação & Identificação</div>
         </div>
       </a>
 
@@ -375,7 +375,7 @@ export function renderHeader(activePage = '') {
       <!-- Backdrop Escuro para fechar ao tocar fora -->
       <div class="nav-backdrop" id="navBackdrop"></div>
 
-      <!-- Drawer de Navegação Responsiva -->
+      <!-- Drawer de Navegação Otimizado -->
       <nav class="nav-links" id="navLinks" role="navigation" aria-label="Menu Principal">
         <div class="nav-drawer-header">
           <div class="brand-logo">
@@ -388,36 +388,38 @@ export function renderHeader(activePage = '') {
         </div>
 
         <a href="/" class="nav-item ${activePage === 'home' ? 'active' : ''}">
-          <span>🏠</span> Início
+          <span class="nav-icon">🏠</span>Início
         </a>
         <a href="/#proposta" class="nav-item" id="navLinkProposta">
-          <span>🔄</span> O Projeto
+          <span class="nav-icon">🔄</span>O Projeto
         </a>
         <a href="/curso" class="nav-item ${activePage === 'curso' ? 'active' : ''}">
-          <span>📚</span> Curso Online
+          <span class="nav-icon">📚</span>Curso
         </a>
         <a href="/consulta" class="nav-item ${activePage === 'consulta' ? 'active' : ''}">
-          <span>🔍</span> Consultar Veículo
+          <span class="nav-icon">🔍</span>Consultar
         </a>
         <a href="/palestras" class="nav-item ${activePage === 'palestras' ? 'active' : ''}">
-          <span>🤝</span> Palestras & Parcerias
+          <span class="nav-icon">🤝</span>Parcerias
         </a>
-        
+
+        <div class="nav-divider"></div>
+
         ${currentUser ? `
           <a href="/meu-ss" class="nav-item nav-cta ${activePage === 'meu-ss' ? 'active' : ''}">
-            👤 Meu SS (${currentUser.nome.split(' ')[0]})
+            <span class="nav-icon">👤</span>Meu SS
           </a>
         ` : `
-          <a href="/cadastro" class="nav-item nav-cta ${activePage === 'cadastro' ? 'active' : ''}">
-            🚀 Cadastrar-se
-          </a>
           <a href="/meu-ss" class="nav-item ${activePage === 'meu-ss' ? 'active' : ''}">
-            🔑 Entrar no Meu SS
+            <span class="nav-icon">🔑</span>Entrar
+          </a>
+          <a href="/cadastro" class="nav-item nav-cta ${activePage === 'cadastro' ? 'active' : ''}">
+            <span class="nav-icon">🚀</span>Cadastrar
           </a>
         `}
 
         <a href="/agentes" class="nav-item nav-agent ${activePage === 'agentes' ? 'active' : ''}">
-          ${currentAgent ? `🚔 Painel ${currentAgent.orgao}` : '🔒 Área de Agentes'}
+          <span class="nav-icon">🚔</span>Agentes
         </a>
       </nav>
     </div>
