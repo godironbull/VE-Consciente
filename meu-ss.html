@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu SS — Área Pessoal do Condutor</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23047857'/><text x='50%' y='68%' font-family='sans-serif' font-weight='900' font-size='50' fill='white' text-anchor='middle'>SS</text></svg>" />
+  <!-- Biblioteca para renderizar QR Code no Canvas -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+
+<header class="site-header" id="site-header"></header>
+
+<!-- TELA DE LOGIN (CASO NÃO ESTEJA LOGADO) -->
+<div id="loginScreen" style="display:none;">
+  <main class="main-wrapper narrow" style="max-width:440px; margin-top:40px;">
+    <div class="card">
+      <div style="text-align:center; margin-bottom:20px;">
+        <div class="brand-emblem" style="margin:0 auto 12px; width:56px; height:56px; font-size:1.6rem;">SS</div>
+        <h2 style="font-family:var(--font-display); font-size:1.5rem; font-weight:800; color:var(--text);">
+          Acesso ao Meu SS
+        </h2>
+        <p style="font-size:0.88rem; color:var(--text-secondary);">
+          Entre com seu E-mail ou CPF e a senha cadastrada.
+        </p>
+      </div>
+
+      <form id="formLogin">
+        <div class="form-group mb-16">
+          <label for="l_identificador">E-mail ou CPF</label>
+          <input type="text" id="l_identificador" placeholder="seu@email.com ou 000.000.000-00" required />
+        </div>
+        <div class="form-group mb-16">
+          <label for="l_senha">Senha</label>
+          <input type="password" id="l_senha" placeholder="Sua senha de acesso" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg">
+          Entrar na Minha Área →
+        </button>
+      </form>
+
+      <div style="text-align:center; margin-top:20px; font-size:0.85rem; color:var(--text-secondary);">
+        Ainda não tem cadastro? <a href="cadastro.html" style="color:var(--primary); font-weight:700;">Cadastre-se aqui</a>
+      </div>
+
+      <div class="alert-box lgpd mt-16" style="padding:10px 14px; font-size:0.75rem;">
+        <span>🔒 Acesso pessoal protegido conforme a Lei Geral de Proteção de Dados.</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- DASHBOARD LOGADO (MEU SS) -->
+<div id="dashboardScreen" style="display:none;">
+  <main class="main-wrapper">
+
+    <!-- HEADER DO DASHBOARD -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+      <div>
+        <span class="hero-badge" style="background:#EFF6FF; color:var(--secondary); border:1px solid #BFDBFE;">
+          Painel do Condutor • Gestão Pessoal & Segurança
+        </span>
+        <h1 style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--text); margin-top:6px;" id="dashGreeting">
+          Olá, Condutor!
+        </h1>
+        <p style="color:var(--text-secondary); font-size:0.92rem;">
+          Gerencie seus dados (LGPD), acompanhe a situação do seu veículo e emita o adesivo QR Code.
+        </p>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <a href="curso.html" class="btn btn-outline btn-sm">
+          📚 Acessar Curso
+        </a>
+        <button class="btn btn-sm" style="background:#F1F5F9; color:var(--danger); border:1px solid var(--border);" onclick="fazerLogout()">
+          Sair da Conta 🚪
+        </button>
+      </div>
+    </div>
+
+    <!-- ABAS DO DASHBOARD -->
+    <div class="dashboard-tabs">
+      <button class="dash-tab-btn active" onclick="switchTab('veiculo')">
+        <span>🛴</span> Meu Veículo & Alertas
+      </button>
+      <button class="dash-tab-btn" onclick="switchTab('qrcode')">
+        <span>🔳</span> Meu QR Code & Adesivo Físico
+      </button>
+      <button class="dash-tab-btn" onclick="switchTab('certificacao')">
+        <span>🎓</span> Minha Certificação
+      </button>
+      <button class="dash-tab-btn" onclick="switchTab('dados')">
+        <span>👤</span> Meus Dados (LGPD)
+      </button>
+    </div>
+
+    <!-- ABA 1: MEU VEÍCULO & ALERTA DE ROUBO/FURTO -->
+    <div class="dash-tab-pane active" id="tab-veiculo">
+      
+      <!-- CARD DE ALERTA DE ROUBO ATIVO (SE HOUVER) -->
+      <div id="boxAlertaRouboAtivo" style="display:none;" class="alert-box red">
+        <span class="alert-icon">🚨</span>
+        <div style="flex:1;">
+          <strong style="font-size:1.1rem;">ALERTA DE ROUBO / FURTO ATIVO NESTE VEÍCULO!</strong><br>
+          <span style="font-size:0.9rem;">
+            Qualquer pessoa ou autoridade que escanear o QR Code verá o aviso de furto e a orientação para acionar a Polícia Militar (190) ou Guarda Municipal.
+          </span>
+          <div style="margin-top:12px;">
+            <button class="btn btn-light btn-sm" style="color:var(--success); font-weight:800;" onclick="declararRecuperado()">
+              🟢 Declarar Veículo Recuperado (Desativar Alerta)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
+        <div class="card">
+          <div class="card-title">
+            <span>🛴</span> Detalhes do Veículo Cadastrado
+          </div>
+          <div class="card-subtitle">
+            Informações vinculadas ao seu identificador digital SS.
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:18px;">
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Identificador SS</span>
+              <div style="font-family:var(--font-display); font-size:1.4rem; font-weight:800; color:var(--secondary);" id="v_idss">—</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Status do Cadastro</span>
+              <div id="v_status_badge" style="margin-top:4px;">—</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Categoria / Tipo</span>
+              <div style="font-weight:700; color:var(--text);" id="v_tipo">—</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Marca & Modelo</span>
+              <div style="font-weight:700; color:var(--text);" id="v_marca_modelo">—</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Cor Predominante</span>
+              <div style="font-weight:600; color:var(--text);" id="v_cor">—</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Chassi / Nº de Série</span>
+              <div style="font-weight:600; color:var(--text);" id="v_chassi">—</div>
+            </div>
+          </div>
+
+          <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Características de Identificação</span>
+            <div style="font-size:0.88rem; color:var(--text-secondary); margin-top:4px;" id="v_caracteristicas">
+              Nenhuma característica adicional cadastrada.
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL DE CONTROLE DE ROUBO/FURTO -->
+        <div class="card" style="border:2px solid #FCA5A5; background:#FFF5F5;">
+          <div class="card-title" style="color:var(--danger); font-size:1.15rem;">
+            <span>🚨</span> Segurança & Alertas
+          </div>
+          <p style="font-size:0.85rem; color:#7F1D1D; line-height:1.5; margin-bottom:16px;">
+            Se o seu veículo foi roubado, furtado ou extraviado, ative o alerta imediatamente para que qualquer consulta pública avise que o veículo é produto de crime.
+          </p>
+
+          <div id="btnGroupAlertas">
+            <button class="btn btn-danger btn-full" onclick="abrirModalRoubo()">
+              🚨 Declarar Roubo / Furto
+            </button>
+          </div>
+
+          <div class="alert-box lgpd mt-16" style="padding:10px; font-size:0.72rem;">
+            <span>📌 Quando recuperado, você pode restaurar o status de veículo ativo a qualquer momento.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA 2: MEU QR CODE & ADESIVO FÍSICO -->
+    <div class="dash-tab-pane" id="tab-qrcode">
+      <div class="card">
+        <div class="card-title">
+          <span>🔳</span> QR Code Oficial e Adesivo para o Veículo
+        </div>
+        <div class="card-subtitle">
+          Imprima e cole este adesivo no guidão, quadro ou carenagem do seu veículo. Ele garante identificação sem expor seus dados pessoais (LGPD).
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; align-items:center;">
+          <div>
+            <h4 style="font-size:1rem; font-weight:700; color:var(--text); margin-bottom:10px;">
+              Instruções de Uso do Adesivo:
+            </h4>
+            <ul style="padding-left:20px; font-size:0.9rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:8px; margin-bottom:20px;">
+              <li>Imprima o modelo ao lado em papel adesivo resistente à água ou proteja com fita adesiva transparente.</li>
+              <li>Fixe em local visível (ex: tubo do guidão, quadro da bicicleta, rabeta ou carenagem da moto).</li>
+              <li>Qualquer pessoa com a câmera do celular pode escanear e verificar que o veículo é cadastrado no SS.</li>
+              <li>Se você ativar o alerta de roubo, o QR Code passa a disparar a tela de alerta automaticamente!</li>
+            </ul>
+
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="window.print()">
+                🖨️ Imprimir Adesivo do Veículo
+              </button>
+              <a href="#" id="btnDownloadQR" class="btn btn-outline" download="qrcode-ss.png">
+                ⬇️ Baixar Imagem do QR Code
+              </a>
+              <a href="#" id="btnVerConsultaPublica" target="_blank" class="btn btn-outline">
+                👁️ Testar Link Público →
+              </a>
+            </div>
+          </div>
+
+          <!-- PRÉVIA DO ADESIVO FÍSICO COM O QR CODE REAL GERADO -->
+          <div class="sticker-preview-wrapper" style="margin:0;">
+            <div class="physical-sticker" id="stickerImprimir">
+              <div class="sticker-header">
+                <div>
+                  <div class="sticker-brand-text">SS — SUSTENTABILIDADE</div>
+                  <div class="sticker-sub">& SEGURANÇA VIÁRIA</div>
+                </div>
+                <div style="font-size:1.4rem;">🌱🛡️</div>
+              </div>
+
+              <div class="sticker-body">
+                <div class="sticker-qr-slot">
+                  <canvas id="qrCanvas" style="max-width:100%; height:auto;"></canvas>
+                </div>
+                <div class="sticker-details">
+                  <div class="sticker-id-code" id="stk_id">ID: SS-00000</div>
+                  <div class="sticker-vehicle-name" id="stk_modelo">Veículo</div>
+                  <div class="sticker-badge-secure">✓ VEÍCULO CADASTRADO</div>
+                  <div style="font-size:0.68rem; color:var(--text-muted); margin-top:4px;">
+                    Escaneie para consultar autenticidade
+                  </div>
+                </div>
+              </div>
+
+              <div class="sticker-footer">
+                🔒 Dados do Condutor Protegidos pela LGPD
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA 3: MINHA CERTIFICAÇÃO -->
+    <div class="dash-tab-pane" id="tab-certificacao">
+      <div class="card">
+        <div class="card-title">
+          <span>🎓</span> Certificação e Histórico de Qualificação
+        </div>
+        <div class="card-subtitle">
+          Status da sua formação educacional para o trânsito seguro.
+        </div>
+
+        <div id="certStatusArea">
+          <!-- PREENCHIDO VIA JAVASCRIPT -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA 4: MEUS DADOS (LGPD: CONSULTA E EDIÇÃO) -->
+    <div class="dash-tab-pane" id="tab-dados">
+      <div class="card">
+        <div class="card-title">
+          <span>👤</span> Gestão dos Meus Dados Pessoais (Direito do Titular — LGPD)
+        </div>
+        <div class="card-subtitle">
+          Você tem total controle sobre suas informações. Atualize seu contato ou endereço sempre que necessário.
+        </div>
+
+        <form id="formEditarDados">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="ed_nome">Nome Completo</label>
+              <input type="text" id="ed_nome" required />
+            </div>
+            <div class="form-group">
+              <label for="ed_cpf">CPF (Não editável)</label>
+              <input type="text" id="ed_cpf" disabled style="background:#F1F5F9;" />
+            </div>
+            <div class="form-group">
+              <label for="ed_nascimento">Data de Nascimento</label>
+              <input type="date" id="ed_nascimento" disabled style="background:#F1F5F9;" />
+            </div>
+            <div class="form-group">
+              <label for="ed_tel">Telefone / WhatsApp</label>
+              <input type="tel" id="ed_tel" required />
+            </div>
+            <div class="form-group">
+              <label for="ed_email">E-mail</label>
+              <input type="email" id="ed_email" required />
+            </div>
+            <div class="form-group">
+              <label for="ed_cidade">Cidade / UF</label>
+              <input type="text" id="ed_cidade" required />
+            </div>
+            <div class="form-group">
+              <label for="ed_bairro">Bairro</label>
+              <input type="text" id="ed_bairro" />
+            </div>
+          </div>
+
+          <div class="text-right mt-24">
+            <button type="submit" class="btn btn-primary">
+              💾 Salvar Alterações nos Meus Dados
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL PARA DECLARAR ROUBO / FURTO -->
+<div id="modalRoubo" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:99999; display:none; align-items:center; justify-content:center; padding:16px;">
+  <div class="card" style="max-width:500px; width:100%; border:2px solid var(--danger);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="font-family:var(--font-display); color:var(--danger); font-size:1.3rem; font-weight:800;">
+        🚨 Ativar Alerta de Roubo ou Furto
+      </h3>
+      <button onclick="fecharModalRoubo()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+    </div>
+
+    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:16px;">
+      Ao confirmar, o status do seu veículo no QR Code passará a exibir um aviso de alerta vermelho, orientando quem o encontrar a chamar a polícia.
+    </p>
+
+    <div class="form-group mb-16">
+      <label for="rb_local">Local Aproximado do Ocorrido</label>
+      <input type="text" id="rb_local" placeholder="Ex: Estacionamento da faculdade, Av. Central, etc." />
+    </div>
+
+    <div class="form-group mb-16">
+      <label for="rb_bo">Nº do Boletim de Ocorrência (se já possuir)</label>
+      <input type="text" id="rb_bo" placeholder="Ex: BO 2026/01928" />
+    </div>
+
+    <div class="form-group mb-24">
+      <label for="rb_obs">Observações Adicionais para Identificação</label>
+      <textarea id="rb_obs" rows="2" placeholder="Ex: Estava sem o espelho direito, adesivo raspado, etc."></textarea>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:12px;">
+      <button class="btn btn-outline" onclick="fecharModalRoubo()">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarRoubo()">Confirmar Alerta de Roubo</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer" id="site-footer"></footer>
+
+<script type="module">
+  import {
+    renderHeader, renderFooter, getDB, saveDB,
+    getCurrentUser, loginUser, logoutUser,
+    getQRCodeUrl, toggleTheftAlert, showToast, maskPhone
+  } from './assets/js/app.js';
+
+  renderHeader('meu-ss');
+  renderFooter();
+
+  let activeUser = getCurrentUser();
+  let userVehicle = null;
+
+  // Verifica URL tab param (ex: meu-ss.html?tab=qrcode)
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialTab = urlParams.get('tab') || 'veiculo';
+
+  function initPage() {
+    if (!activeUser) {
+      document.getElementById('loginScreen').style.display = 'block';
+      document.getElementById('dashboardScreen').style.display = 'none';
+      setupLoginForm();
+    } else {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboardScreen').style.display = 'block';
+      loadDashboard();
+      switchTab(initialTab);
+    }
+  }
+
+  function setupLoginForm() {
+    const form = document.getElementById('formLogin');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('l_identificador').value;
+      const pass = document.getElementById('l_senha').value;
+
+      const res = loginUser(id, pass);
+      if (res.success) {
+        activeUser = res.user;
+        showToast('Login realizado com sucesso!', 'success');
+        initPage();
+      } else {
+        showToast(res.message, 'error');
+      }
+    });
+  }
+
+  function loadDashboard() {
+    const db = getDB();
+    document.getElementById('dashGreeting').textContent = `Olá, ${activeUser.nome.split(' ')[0]}!`;
+
+    // Busca veículo do usuário
+    userVehicle = db.veiculos.find(v => v.usuarioId === activeUser.id);
+    if (!userVehicle && db.veiculos.length > 0) {
+      userVehicle = db.veiculos[0]; // fallback
+    }
+
+    if (userVehicle) {
+      document.getElementById('v_idss').textContent = userVehicle.idSS;
+      document.getElementById('v_tipo').textContent = userVehicle.tipoLabel || userVehicle.tipo;
+      document.getElementById('v_marca_modelo').textContent = `${userVehicle.marca} ${userVehicle.modelo}`;
+      document.getElementById('v_cor').textContent = userVehicle.cor;
+      document.getElementById('v_chassi').textContent = userVehicle.chassi;
+      document.getElementById('v_caracteristicas').textContent = userVehicle.caracteristicas || 'Nenhuma informada.';
+
+      // Badge de status
+      const badge = document.getElementById('v_status_badge');
+      const boxAlerta = document.getElementById('boxAlertaRouboAtivo');
+
+      if (userVehicle.status === 'ROUBADO_FURTADO') {
+        badge.innerHTML = `<span class="status-badge-pill stolen">🚨 ALERTA DE ROUBO ATIVO</span>`;
+        boxAlerta.style.display = 'flex';
+      } else {
+        badge.innerHTML = `<span class="status-badge-pill regular">✓ CADASTRO ATIVO</span>`;
+        boxAlerta.style.display = 'none';
+      }
+
+      // Preenche adesivo
+      document.getElementById('stk_id').textContent = `ID: ${userVehicle.idSS}`;
+      document.getElementById('stk_modelo').textContent = `${userVehicle.marca} ${userVehicle.modelo}`;
+
+      // Gera QR Code no Canvas
+      gerarQRCodeCanvas(userVehicle.idSS);
+    }
+
+    // Carrega aba de certificação
+    loadCertificacaoTab(db);
+
+    // Carrega formulário de dados (LGPD)
+    loadDadosTab();
+  }
+
+  function gerarQRCodeCanvas(idSS) {
+    const publicUrl = getQRCodeUrl(idSS);
+    const canvas = document.getElementById('qrCanvas');
+
+    // Link para testar no botão
+    const btnVer = document.getElementById('btnVerConsultaPublica');
+    btnVer.href = publicUrl;
+
+    if (typeof QRCode !== 'undefined' && canvas) {
+      QRCode.toCanvas(canvas, publicUrl, {
+        width: 140,
+        margin: 1,
+        color: {
+          dark: '#047857',
+          light: '#FFFFFF'
+        }
+      }, (err) => {
+        if (!err) {
+          // Prepara link de download
+          const btnDown = document.getElementById('btnDownloadQR');
+          btnDown.href = canvas.toDataURL('image/png');
+        }
+      });
+    }
+  }
+
+  function loadCertificacaoTab(db) {
+    const cert = db.certificados.find(c => c.usuarioId === activeUser.id);
+    const container = document.getElementById('certStatusArea');
+
+    if (cert) {
+      const dtConcl = new Date(cert.dataConclusao).toLocaleDateString('pt-BR');
+      const dtVal = new Date(cert.dataValidade).toLocaleDateString('pt-BR');
+
+      container.innerHTML = `
+        <div class="alert-box green mb-16">
+          <span class="alert-icon">🏅</span>
+          <div>
+            <strong>Certificação SS Ativa e Válida!</strong><br>
+            <span>Concluída com aproveitamento em ${dtConcl}. Válida até ${dtVal}.</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:12px;">
+          <a href="certificado.html" class="btn btn-primary">
+            🎓 Visualizar / Imprimir Certificado Oficial →
+          </a>
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div class="alert-box amber mb-16">
+          <span class="alert-icon">⏳</span>
+          <div>
+            <strong>Certificação Pendente</strong><br>
+            <span>Você ainda não concluiu a avaliação prática do curso online.</span>
+          </div>
+        </div>
+        <a href="curso.html" class="btn btn-primary">
+          Ir para o Curso e Avaliação →
+        </a>
+      `;
+    }
+  }
+
+  function loadDadosTab() {
+    document.getElementById('ed_nome').value = activeUser.nome || '';
+    document.getElementById('ed_cpf').value = activeUser.cpf || '';
+    document.getElementById('ed_nascimento').value = activeUser.nascimento || '';
+    document.getElementById('ed_tel').value = activeUser.telefone || '';
+    document.getElementById('ed_email').value = activeUser.email || '';
+    document.getElementById('ed_cidade').value = activeUser.endereco?.cidade || '';
+    document.getElementById('ed_bairro').value = activeUser.endereco?.bairro || '';
+
+    maskPhone(document.getElementById('ed_tel'));
+
+    const formEdit = document.getElementById('formEditarDados');
+    formEdit.onsubmit = (e) => {
+      e.preventDefault();
+      const db = getDB();
+      const uIdx = db.usuarios.findIndex(u => u.id === activeUser.id);
+      if (uIdx !== -1) {
+        db.usuarios[uIdx].nome = document.getElementById('ed_nome').value.trim();
+        db.usuarios[uIdx].telefone = document.getElementById('ed_tel').value.trim();
+        db.usuarios[uIdx].email = document.getElementById('ed_email').value.trim().toLowerCase();
+        db.usuarios[uIdx].endereco.cidade = document.getElementById('ed_cidade').value.trim();
+        db.usuarios[uIdx].endereco.bairro = document.getElementById('ed_bairro').value.trim();
+
+        saveDB(db);
+        activeUser = db.usuarios[uIdx];
+        showToast('Dados atualizados com sucesso (LGPD)!', 'success');
+        document.getElementById('dashGreeting').textContent = `Olá, ${activeUser.nome.split(' ')[0]}!`;
+      }
+    };
+  }
+
+  // Troca de Abas
+  window.switchTab = function(tabName) {
+    document.querySelectorAll('.dash-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.dash-tab-pane').forEach(p => p.classList.remove('active'));
+
+    const targetBtn = Array.from(document.querySelectorAll('.dash-tab-btn')).find(b => b.getAttribute('onclick')?.includes(tabName));
+    if (targetBtn) targetBtn.classList.add('active');
+
+    const targetPane = document.getElementById(`tab-${tabName}`);
+    if (targetPane) targetPane.classList.add('active');
+  };
+
+  // Funções de Alerta de Roubo
+  window.abrirModalRoubo = function() {
+    const m = document.getElementById('modalRoubo');
+    m.style.display = 'flex';
+  };
+
+  window.fecharModalRoubo = function() {
+    document.getElementById('modalRoubo').style.display = 'none';
+  };
+
+  window.confirmarRoubo = function() {
+    if (!userVehicle) return;
+    const local = document.getElementById('rb_local').value.trim();
+    const bo = document.getElementById('rb_bo').value.trim();
+    const obs = document.getElementById('rb_obs').value.trim();
+
+    toggleTheftAlert(userVehicle.idSS, true, { local, bo, obs });
+    fecharModalRoubo();
+    showToast('Alerta de roubo/furto ativado com sucesso!', 'warning', 5000);
+    loadDashboard();
+  };
+
+  window.declararRecuperado = function() {
+    if (!userVehicle) return;
+    if (confirm('Deseja realmente desativar o alerta e declarar o veículo como recuperado?')) {
+      toggleTheftAlert(userVehicle.idSS, false);
+      showToast('Veículo declarado como recuperado! Status normal restaurado.', 'success', 5000);
+      loadDashboard();
+    }
+  };
+
+  window.fazerLogout = function() {
+    logoutUser();
+  };
+
+  initPage();
+</script>
+</body>
+</html>

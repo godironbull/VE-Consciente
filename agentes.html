@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Área Institucional — Agentes Autorizados | SS Sustentabilidade & Segurança</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231E40AF'/><text x='50%' y='68%' font-family='sans-serif' font-weight='900' font-size='50' fill='white' text-anchor='middle'>SS</text></svg>" />
+  <!-- Scanner de Câmera HTML5 -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+
+<header class="site-header" id="site-header"></header>
+
+<!-- TELA DE LOGIN INSTITUCIONAL DO AGENTE -->
+<div id="agentLoginScreen" style="display:none;">
+  <main class="main-wrapper narrow" style="max-width:460px; margin-top:40px;">
+    <div class="card" style="border-top: 5px solid var(--secondary);">
+      <div style="text-align:center; margin-bottom:20px;">
+        <div style="font-size:3rem; margin-bottom:6px;">🚔</div>
+        <h2 style="font-family:var(--font-display); font-size:1.5rem; font-weight:800; color:var(--secondary-dark);">
+          Acesso Institucional Autorizado
+        </h2>
+        <p style="font-size:0.85rem; color:var(--text-secondary);">
+          Área restrita a agentes do DETRAN, Polícia Militar, Guarda Municipal e órgãos conveniados.
+        </p>
+      </div>
+
+      <form id="formAgentLogin">
+        <div class="form-group mb-16">
+          <label for="ag_matricula">Matrícula Institucional / ID</label>
+          <input type="text" id="ag_matricula" placeholder="Ex: DETRAN-2026, PM-190, GM-153" style="text-transform:uppercase;" required />
+        </div>
+        <div class="form-group mb-16">
+          <label for="ag_senha">Senha de Acesso Institucional</label>
+          <input type="password" id="ag_senha" placeholder="Sua senha corporativa" required />
+        </div>
+        <button type="submit" class="btn btn-secondary btn-full btn-lg">
+          Validar Credenciais e Acessar Painel →
+        </button>
+      </form>
+
+      <!-- CREDENCIAIS DE TESTE / DEMONSTRAÇÃO -->
+      <div style="background:#F1F5F9; border:1px dashed #CBD5E1; border-radius:var(--radius-sm); padding:14px; margin-top:20px; font-size:0.8rem;">
+        <div style="font-weight:700; color:var(--text); margin-bottom:6px;">🔑 Credenciais Oficiais para Teste (Demo):</div>
+        <div style="display:flex; flex-direction:column; gap:4px; color:var(--text-secondary); font-family:monospace;">
+          <div>• <strong>DETRAN-PR:</strong> DETRAN-2026 | Senha: detran2026</div>
+          <div>• <strong>Polícia Militar:</strong> PM-190 | Senha: pm190</div>
+          <div>• <strong>Guarda Municipal:</strong> GM-153 | Senha: guarda2026</div>
+        </div>
+      </div>
+
+      <div class="alert-box blue mt-16" style="padding:10px; font-size:0.75rem; margin-bottom:0;">
+        <span>ℹ️ Todas as consultas realizadas ficam auditadas com carimbo de data, hora e matrícula do agente.</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- PAINEL DO AGENTE AUTORIZADO (LOGADO) -->
+<div id="agentPanelScreen" style="display:none;">
+  <main class="main-wrapper wide">
+
+    <!-- CABEÇALHO DO AGENTE -->
+    <div style="background:linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%); color:#fff; border-radius:var(--radius-md); padding:24px 28px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div>
+        <span class="hero-badge" style="background:rgba(255,255,255,0.2); border-color:rgba(255,255,255,0.3); margin-bottom:8px;">
+          Ambiente de Fiscalização e Apoio • Acesso Seguro
+        </span>
+        <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800;" id="agGreeting">
+          Painel Institucional
+        </h2>
+        <div style="font-size:0.85rem; opacity:0.9;" id="agBadgeDetails">
+          Matrícula: — | Órgão: —
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-sm" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.3);" onclick="agentLogout()">
+          Encerrar Sessão 🔒
+        </button>
+      </div>
+    </div>
+
+    <!-- BUSCA E SCANNER -->
+    <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:24px; margin-bottom:24px;">
+
+      <!-- CARD DE CONSULTA RÁPIDA -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔍</span> Consulta de Identificação SS ou CPF
+        </div>
+        <div class="card-subtitle">
+          Localize o cadastro do condutor e veículo em tempo real para fiscalização educativa ou checagem de furto.
+        </div>
+
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <input type="text" id="agSearchQuery" placeholder="Digite ID SS (ex: SS-48291), CPF ou Chassi" style="font-weight:700;" onkeydown="if(event.key==='Enter') buscarAgente()" />
+          <button class="btn btn-secondary" onclick="buscarAgente()">
+            Consultar
+          </button>
+        </div>
+
+        <div style="display:flex; gap:8px; font-size:0.75rem; color:var(--text-muted); align-items:center; flex-wrap:wrap;">
+          <span>Testar rapidamente:</span>
+          <button onclick="pesquisaRapida('SS-48291')" style="background:none; border:1px solid var(--border); padding:2px 8px; border-radius:4px; cursor:pointer;">
+            🟢 SS-48291 (Patinete Xiaomi)
+          </button>
+          <button onclick="pesquisaRapida('SS-A7F29K')" style="background:none; border:1px solid #FCA5A5; color:var(--danger); padding:2px 8px; border-radius:4px; cursor:pointer;">
+            🚨 SS-A7F29K (Moto com Alerta)
+          </button>
+        </div>
+      </div>
+
+      <!-- SCANNER DE CÂMERA -->
+      <div class="card">
+        <div class="card-title">
+          <span>📷</span> Leitura de QR Code via Câmera
+        </div>
+        <div class="card-subtitle">
+          Aponte a câmera do smartphone ou tablet para o adesivo SS no veículo.
+        </div>
+
+        <div id="cameraArea">
+          <button class="btn btn-outline btn-full" id="btnAtivarCamera" onclick="iniciarCameraScanner()">
+            📷 Ativar Câmera para Leitura do QR Code
+          </button>
+          <div id="qrReaderBox" style="display:none; margin-top:14px; border-radius:var(--radius-sm); overflow:hidden;"></div>
+          <button class="btn btn-sm btn-danger btn-full mt-16" id="btnPararCamera" style="display:none;" onclick="pararCameraScanner()">
+            ✕ Fechar Câmera
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FICHA COMPLETA DO CONDUTOR & VEÍCULO (RESULTADO DA PESQUISA) -->
+    <div id="fichaAgenteArea" style="display:none;">
+      <!-- RENDERIZADA VIA JAVASCRIPT -->
+    </div>
+
+    <!-- NOTA DE RESPONSABILIDADE LEGAL -->
+    <div class="alert-box blue mt-24">
+      <span class="alert-icon">⚖️</span>
+      <div>
+        <strong>Importante — Diretrizes Institucionais do Programa SS:</strong><br>
+        O SS não é um sistema de aplicação direta de multas de trânsito. Ele é uma ferramenta de <strong>educação preventiva, identificação e apoio às autoridades</strong>. Qualquer sanção ou fiscalização é de competência exclusiva dos agentes públicos em conformidade com o Código de Trânsito Brasileiro (CTB).
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer class="site-footer" id="site-footer"></footer>
+
+<script type="module">
+  import {
+    renderHeader, renderFooter, getDB, saveDB,
+    getCurrentAgent, loginAgent, logoutAgent,
+    getAuthorizedVehicleData, showToast
+  } from './assets/js/app.js';
+
+  renderHeader('agentes');
+  renderFooter();
+
+  let activeAgent = getCurrentAgent();
+  let html5Scanner = null;
+
+  function initAgentPage() {
+    if (!activeAgent) {
+      document.getElementById('agentLoginScreen').style.display = 'block';
+      document.getElementById('agentPanelScreen').style.display = 'none';
+      setupAgentLoginForm();
+    } else {
+      document.getElementById('agentLoginScreen').style.display = 'none';
+      document.getElementById('agentPanelScreen').style.display = 'block';
+      document.getElementById('agGreeting').textContent = `Bem-vindo, ${activeAgent.nome}`;
+      document.getElementById('agBadgeDetails').textContent = `Matrícula: ${activeAgent.matricula} • Órgão: ${activeAgent.orgao}`;
+    }
+  }
+
+  function setupAgentLoginForm() {
+    const form = document.getElementById('formAgentLogin');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const mat = document.getElementById('ag_matricula').value;
+      const pass = document.getElementById('ag_senha').value;
+
+      const res = loginAgent(mat, pass);
+      if (res.success) {
+        activeAgent = res.agent;
+        showToast(`Acesso autorizado: ${res.agent.orgao}`, 'success');
+        initAgentPage();
+      } else {
+        showToast(res.message, 'error');
+      }
+    });
+  }
+
+  window.agentLogout = function() {
+    logoutAgent();
+  };
+
+  window.pesquisaRapida = function(idSS) {
+    document.getElementById('agSearchQuery').value = idSS;
+    buscarAgente();
+  };
+
+  window.buscarAgente = function() {
+    const q = document.getElementById('agSearchQuery').value.trim();
+    if (!q) {
+      showToast('Digite um ID SS, CPF ou Chassi.', 'warning');
+      return;
+    }
+
+    const db = getDB();
+    const cleanQ = q.toUpperCase();
+    const cleanCpf = q.replace(/\D/g, '');
+
+    // Busca veículo por ID SS, chassi ou CPF do dono
+    let v = db.veiculos.find(v => v.idSS.toUpperCase() === cleanQ || v.chassi.toUpperCase() === cleanQ);
+
+    if (!v && cleanCpf) {
+      const u = db.usuarios.find(u => u.cpf.replace(/\D/g, '') === cleanCpf);
+      if (u) {
+        v = db.veiculos.find(veic => veic.usuarioId === u.id);
+      }
+    }
+
+    if (!v) {
+      showToast('Nenhum registro encontrado no sistema.', 'error');
+      document.getElementById('fichaAgenteArea').style.display = 'none';
+      return;
+    }
+
+    exibirFichaInstitucional(v.idSS);
+  };
+
+  function exibirFichaInstitucional(idSS) {
+    const data = getAuthorizedVehicleData(idSS);
+    if (!data) return;
+
+    const area = document.getElementById('fichaAgenteArea');
+    area.style.display = 'block';
+
+    const isStolen = data.veiculo.status === 'ROUBADO_FURTADO';
+
+    area.innerHTML = `
+      <div class="card" style="border: 2px solid ${isStolen ? 'var(--danger)' : 'var(--secondary)'};">
+        
+        <!-- BANNER DE STATUS -->
+        <div style="background:${isStolen ? '#DC2626' : '#1E40AF'}; color:#fff; border-radius:var(--radius-sm); padding:16px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+          <div>
+            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; opacity:0.85;">
+              Status Operacional do Veículo
+            </div>
+            <div style="font-family:var(--font-display); font-size:1.5rem; font-weight:800;">
+              ${isStolen ? '🚨 ALERTA ATIVO DE ROUBO / FURTO' : '✓ VEÍCULO CADASTRADO E REGULAR'}
+            </div>
+          </div>
+          <div style="font-family:var(--font-display); font-size:1.8rem; font-weight:800; background:rgba(255,255,255,0.2); padding:4px 16px; border-radius:6px;">
+            ${data.veiculo.idSS}
+          </div>
+        </div>
+
+        ${isStolen && data.veiculo.detalhesRoubo ? `
+          <div class="alert-box red" style="margin-top:0;">
+            <span class="alert-icon">⚠️</span>
+            <div>
+              <strong>Detalhes Registrados do Furto / Roubo:</strong><br>
+              <span>• Local Declarado: ${data.veiculo.detalhesRoubo.localAproximado || 'Não informado'}</span><br>
+              <span>• Boletim: ${data.veiculo.detalhesRoubo.boletimOcorrencia || 'Sem número'}</span><br>
+              <span>• Observações: ${data.veiculo.detalhesRoubo.observacoes || 'Nenhuma'}</span>
+            </div>
+          </div>
+        ` : ''}
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+
+          <!-- DADOS DO VEÍCULO -->
+          <div>
+            <h4 style="font-size:1.05rem; font-weight:700; color:var(--text); margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:6px;">
+              🛵 Dados Técnicos do Veículo
+            </h4>
+            <div style="display:flex; flex-direction:column; gap:8px; font-size:0.9rem;">
+              <div><strong>Categoria:</strong> ${data.veiculo.tipoLabel || data.veiculo.tipo}</div>
+              <div><strong>Marca / Modelo:</strong> ${data.veiculo.marca} ${data.veiculo.modelo}</div>
+              <div><strong>Cor:</strong> ${data.veiculo.cor}</div>
+              <div><strong>Chassi / Nº de Série:</strong> ${data.veiculo.chassi}</div>
+              <div><strong>Características Visuais:</strong> ${data.veiculo.caracteristicas || 'Nenhuma'}</div>
+              <div><strong>Data de Cadastro:</strong> ${new Date(data.veiculo.dataCadastro).toLocaleDateString('pt-BR')}</div>
+            </div>
+          </div>
+
+          <!-- DADOS DO PROPRIETÁRIO (ACESSO INSTITUCIONAL PERMITIDO) -->
+          <div>
+            <h4 style="font-size:1.05rem; font-weight:700; color:var(--text); margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:6px;">
+              👤 Dados do Proprietário (Uso Restrito do Agente)
+            </h4>
+            ${data.proprietario ? `
+              <div style="display:flex; flex-direction:column; gap:8px; font-size:0.9rem;">
+                <div><strong>Nome Completo:</strong> ${data.proprietario.nome}</div>
+                <div><strong>CPF:</strong> ${data.proprietario.cpf}</div>
+                <div><strong>Telefone de Contato:</strong> ${data.proprietario.telefone}</div>
+                <div><strong>E-mail:</strong> ${data.proprietario.email}</div>
+                <div><strong>Endereço:</strong> ${data.proprietario.endereco?.bairro || ''} - ${data.proprietario.endereco?.cidade || ''}</div>
+                
+                ${data.proprietario.responsavel ? `
+                  <div style="background:#FFFBEB; border:1px solid #FCD34D; border-radius:6px; padding:10px; margin-top:8px;">
+                    <strong style="color:#92400E; font-size:0.85rem;">👨‍👧 Responsável Legal (Condutor Menor de Idade):</strong>
+                    <div style="font-size:0.82rem; color:#78350F; margin-top:2px;">
+                      Nome: ${data.proprietario.responsavel.nome}<br>
+                      CPF: ${data.proprietario.responsavel.cpf} • Tel: ${data.proprietario.responsavel.telefone}
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+            ` : '<p style="color:var(--text-muted);">Proprietário não localizado.</p>'}
+          </div>
+
+        </div>
+
+        <!-- HISTÓRICO DE QUALIFICAÇÃO / CERTIFICAÇÃO -->
+        <div style="border-top:1px solid var(--border); margin-top:20px; padding-top:16px;">
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:8px;">
+            🎓 Histórico no Programa Educacional SS:
+          </h4>
+          ${data.certificado ? `
+            <div style="font-size:0.85rem; color:var(--text-secondary);">
+              ✓ Concluiu com aprovação o Curso de Segurança Viária.<br>
+              Validação: <span style="font-family:monospace; font-weight:700;">${data.certificado.hashValidacao}</span> (Válido até ${new Date(data.certificado.dataValidade).toLocaleDateString('pt-BR')})
+            </div>
+          ` : `
+            <div style="font-size:0.85rem; color:var(--danger); font-weight:600;">
+              ⚠️ Certificação pendente (o condutor ainda não concluiu a avaliação do programa).
+            </div>
+          `}
+        </div>
+
+        <!-- REGISTRO DE ORIENTAÇÃO EDUCATIVA PELO AGENTE -->
+        <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; margin-top:20px;">
+          <h4 style="font-size:0.92rem; font-weight:700; color:var(--text); margin-bottom:6px;">
+            📝 Registrar Nota de Fiscalização / Orientação Educativa
+          </h4>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="agNotaFiscalizacao" placeholder="Ex: Condutor orientado quanto ao uso de capacete certificado na Av. Central" />
+            <button class="btn btn-secondary btn-sm" onclick="registrarNotaAgente('${data.veiculo.idSS}')">
+              Registrar Nota
+            </button>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  window.registrarNotaAgente = function(idSS) {
+    const nota = document.getElementById('agNotaFiscalizacao').value.trim();
+    if (!nota) return;
+
+    const db = getDB();
+    db.ocorrenciasAgentes.push({
+      idSS,
+      agenteMatricula: activeAgent.matricula,
+      agenteOrgao: activeAgent.orgao,
+      dataHora: new Date().toISOString(),
+      nota
+    });
+    saveDB(db);
+
+    showToast('Nota de orientação educativa registrada com sucesso!', 'success');
+    document.getElementById('agNotaFiscalizacao').value = '';
+  };
+
+  // Funções de Câmera Scanner
+  window.iniciarCameraScanner = function() {
+    const btnAtivar = document.getElementById('btnAtivarCamera');
+    const box = document.getElementById('qrReaderBox');
+    const btnParar = document.getElementById('btnPararCamera');
+
+    btnAtivar.style.display = 'none';
+    box.style.display = 'block';
+    btnParar.style.display = 'block';
+
+    html5Scanner = new Html5Qrcode('qrReaderBox');
+    html5Scanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      (decodedText) => {
+        pararCameraScanner();
+        // Tenta extrair idSS se vier na forma de URL consulta.html?id=SS-XXXXXX
+        let idSS = decodedText;
+        if (decodedText.includes('id=')) {
+          idSS = decodedText.split('id=')[1].split('&')[0];
+        }
+        document.getElementById('agSearchQuery').value = idSS;
+        buscarAgente();
+        showToast('QR Code lido com sucesso!', 'success');
+      },
+      () => {}
+    ).catch(err => {
+      showToast('Não foi possível acessar a câmera. Verifique as permissões.', 'error');
+      pararCameraScanner();
+    });
+  };
+
+  window.pararCameraScanner = function() {
+    if (html5Scanner) {
+      html5Scanner.stop().then(() => {
+        html5Scanner.clear();
+        html5Scanner = null;
+      }).catch(() => {});
+    }
+    document.getElementById('btnAtivarCamera').style.display = 'block';
+    document.getElementById('qrReaderBox').style.display = 'none';
+    document.getElementById('btnPararCamera').style.display = 'none';
+  };
+
+  initAgentPage();
+</script>
+</body>
+</html>

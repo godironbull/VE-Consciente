@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avaliação Prática — SS Sustentabilidade & Segurança</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23047857'/><text x='50%' y='68%' font-family='sans-serif' font-weight='900' font-size='50' fill='white' text-anchor='middle'>SS</text></svg>" />
+</head>
+<body>
+
+<header class="site-header" id="site-header"></header>
+
+<main class="main-wrapper narrow">
+
+  <div style="text-align:center; margin-bottom:28px;">
+    <div class="hero-badge" style="background:#FEF3C7; color:#92400E; border:1px solid #FDE68A;">
+      Etapa 4 de 5 • Avaliação de Situações Práticas
+    </div>
+    <h1 style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--text); margin-bottom:6px;">
+      Avaliação Prática de Segurança Viária
+    </h1>
+    <p style="color:var(--text-secondary); font-size:0.95rem; max-width:600px; margin:0 auto;">
+      Analise as 5 situações reais do trânsito abaixo. Para obter sua <strong>Certificação SS</strong>, você precisa acertar pelo menos <strong>4 de 5 questões (80%)</strong>.
+    </p>
+  </div>
+
+  <div id="quizContainer">
+    <!-- QUESTÕES RENDERIZADAS VIA JAVASCRIPT -->
+  </div>
+
+  <div id="resultBox" style="display:none;" class="card text-center mb-24">
+    <!-- RESULTADO APÓS SUBMISSÃO -->
+  </div>
+
+  <div class="text-center mt-24" id="quizActions">
+    <button class="btn btn-primary btn-lg" id="btnSubmitQuiz" onclick="submitQuiz()">
+      Verificar Respostas e Emitir Certificado SS →
+    </button>
+  </div>
+
+</main>
+
+<footer class="site-footer" id="site-footer"></footer>
+
+<script type="module">
+  import {
+    renderHeader, renderFooter, getDB, saveDB,
+    getCurrentUser, showToast
+  } from './assets/js/app.js';
+
+  renderHeader('curso');
+  renderFooter();
+
+  const scenarios = [
+    {
+      id: 1,
+      badge: 'Situação 1 • Cruzamento e Semáforo',
+      title: 'Você está chegando a um cruzamento e o semáforo está vermelho. A rua transversal parece vazia e não há pedestres atravessando no momento. O que você deve fazer?',
+      options: [
+        { text: 'Avançar com cuidado em baixa velocidade, aproveitando que não há carros na rua transversal.', correct: false },
+        { text: 'Parar totalmente o veículo antes da faixa de retenção e aguardar o sinal verde para arrancar com segurança.', correct: true },
+        { text: 'Buzinar forte para avisar que vai passar no vermelho e acelerar rapidamente.', correct: false },
+        { text: 'Subir na calçada em velocidade para contornar a esquina e desviar do semáforo.', correct: false }
+      ],
+      explanation: 'Avançar o sinal vermelho é infração gravíssima (art. 208 do CTB) e a maior causa de acidentes severos em cruzamentos. A parada total é obrigatória sempre.'
+    },
+    {
+      id: 2,
+      badge: 'Situação 2 • Sentido da Via',
+      title: 'Você precisa ir a um comércio que fica a apenas 100 metros de distância, mas a rua é de sentido único oposto (contramão). Como você deve proceder?',
+      options: [
+        { text: 'Andar pela contramão bem encostado no meio-fio ou nos carros estacionados, pois é uma distância curta.', correct: false },
+        { text: 'Fazer o trajeto no sentido correto das vias ao redor ou, se preferir ir direto, desmontar do veículo e empurrá-lo a pé pela calçada.', correct: true },
+        { text: 'Trafegar na contramão em velocidade máxima para cruzar o quarteirão o mais rápido possível.', correct: false },
+        { text: 'Patinetes elétricos não precisam respeitar mão de direção em vias urbanas secundárias.', correct: false }
+      ],
+      explanation: 'Circular na contramão gera altíssimo risco de colisão frontal. Ao desmontar e empurrar o veículo a pé, o condutor equipara-se legalmente ao pedestre.'
+    },
+    {
+      id: 3,
+      badge: 'Situação 3 • Transporte de Passageiros',
+      title: 'Um colega pede uma carona no seu patinete elétrico para percorrer algumas quadras. Qual é a orientação correta?',
+      options: [
+        { text: 'Aceitar a carona, desde que ele vá segurando no seu ombro e em velocidade reduzida.', correct: false },
+        { text: 'Recusar educadamente. Patinetes elétricos são projetados para 1 único ocupante; o excesso de peso afeta gravemente o centro de equilíbrio e anula os freios.', correct: true },
+        { text: 'Permitir que ele vá na sua frente segurando no guidão.', correct: false },
+        { text: 'A carona só é permitida se ambos estiverem de capacete.', correct: false }
+      ],
+      explanation: 'Patinetes e autopropelidos não comportam garupa. Dois ocupantes causam perda instantânea de estabilidade em buracos ou curvas.'
+    },
+    {
+      id: 4,
+      badge: 'Situação 4 • Circulação em Calçadas',
+      title: 'Sobre a circulação de veículos de duas rodas motorizados ou elétricos em calçadas destinadas a pedestres:',
+      options: [
+        { text: 'É permitida livremente, contanto que use a campainha para que os pedestres abram caminho.', correct: false },
+        { text: 'É terminantemente proibida montado no veículo, exceto em calçadas expressamente sinalizadas pelo município, respeitando a velocidade máxima permitida de pedestres.', correct: true },
+        { text: 'É permitida desde que a calçada tenha mais de 2 metros de largura.', correct: false },
+        { text: 'Só motos não podem; patinetes e bicicletas elétricas têm direito irrestrito de uso da calçada.', correct: false }
+      ],
+      explanation: 'A calçada é refúgio inviolável do pedestre. Para transitar por ela, o condutor de veículo elétrico ou moto deve estar desembarcado.'
+    },
+    {
+      id: 5,
+      badge: 'Situação 5 • Veículos "Desbloqueados" ou Adulterados',
+      title: 'Você viu na internet como destravar o limitador de velocidade do patinete elétrico para que ele ultrapasse os 32 km/h permitidos pela Resolução CONTRAN 996/2023. O que acontece na prática?',
+      options: [
+        { text: 'Não há problema legal nenhum, desde que use capacete de motociclista.', correct: false },
+        { text: 'O veículo é legalmente reclassificado como ciclomotor não registrado, operando na ilegalidade e sujeito à apreensão imediata pelas autoridades em fiscalização.', correct: true },
+        { text: 'O fabricante assume a garantia se a velocidade não passar de 45 km/h.', correct: false },
+        { text: 'O limite de 32 km/h é apenas uma recomendação sugerida aos fabricantes e não tem valor de trânsito.', correct: false }
+      ],
+      explanation: 'Veículos autopropelidos desregulados que excedem 32 km/h tornam-se veículos sem homologação, sendo recolhidos pelos órgãos fiscalizadores.'
+    }
+  ];
+
+  let userAnswers = {};
+
+  function renderQuiz() {
+    const container = document.getElementById('quizContainer');
+    container.innerHTML = scenarios.map((q, idx) => `
+      <div class="quiz-scenario-box" id="q-box-${q.id}">
+        <span class="scenario-badge">${q.badge}</span>
+        <h4>${idx + 1}. ${q.title}</h4>
+        <div class="quiz-options-list">
+          ${q.options.map((opt, optIdx) => `
+            <div class="quiz-option-item" id="opt-${q.id}-${optIdx}" onclick="selectAnswer(${q.id}, ${optIdx})">
+              <span style="font-weight:700; color:var(--text-muted);">${String.fromCharCode(65 + optIdx)})</span>
+              <span>${opt.text}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div id="exp-${q.id}" style="display:none; margin-top:14px;"></div>
+      </div>
+    `).join('');
+  }
+
+  window.selectAnswer = function(questionId, optionIdx) {
+    userAnswers[questionId] = optionIdx;
+
+    // Remove seleção anterior dessa questão
+    const parent = document.getElementById(`q-box-${questionId}`);
+    parent.querySelectorAll('.quiz-option-item').forEach(el => el.classList.remove('selected'));
+
+    // Marca o selecionado
+    document.getElementById(`opt-${questionId}-${optionIdx}`).classList.add('selected');
+  };
+
+  window.submitQuiz = function() {
+    if (Object.keys(userAnswers).length < scenarios.length) {
+      showToast('Por favor, responda todas as 5 situações práticas antes de verificar.', 'warning');
+      return;
+    }
+
+    let correctCount = 0;
+
+    scenarios.forEach(q => {
+      const selected = userAnswers[q.id];
+      const isCorrect = q.options[selected].correct;
+      if (isCorrect) correctCount++;
+
+      // Atualiza visual das opções
+      q.options.forEach((opt, optIdx) => {
+        const el = document.getElementById(`opt-${q.id}-${optIdx}`);
+        el.classList.remove('selected');
+        if (opt.correct) {
+          el.classList.add('correct');
+        } else if (optIdx === selected) {
+          el.classList.add('wrong');
+        }
+      });
+
+      // Mostra explicação didática
+      const expEl = document.getElementById(`exp-${q.id}`);
+      expEl.style.display = 'block';
+      expEl.innerHTML = `
+        <div class="alert-box ${isCorrect ? 'green' : 'amber'}" style="margin:0;">
+          <span class="alert-icon">${isCorrect ? '✅' : '💡'}</span>
+          <div>
+            <strong>${isCorrect ? 'Correto!' : 'Orientação de Segurança:'}</strong> ${q.explanation}
+          </div>
+        </div>
+      `;
+    });
+
+    // Oculta botão de submit
+    document.getElementById('quizActions').style.display = 'none';
+
+    const resultBox = document.getElementById('resultBox');
+    resultBox.style.display = 'block';
+
+    const pct = Math.round((correctCount / scenarios.length) * 100);
+    const passed = correctCount >= 4;
+
+    if (passed) {
+      // Grava certificado no banco de dados local
+      const db = getDB();
+      const currentUser = getCurrentUser();
+      const sessionRaw = localStorage.getItem('ss_user_session');
+      const session = sessionRaw ? JSON.parse(sessionRaw) : null;
+
+      const userId = currentUser ? currentUser.id : (session?.id || 'usr_convidado');
+      const veiculoIdSS = session?.veiculoIdSS || db.veiculos.find(v => v.usuarioId === userId)?.idSS || 'SS-48291';
+
+      const certId = 'CERT-SS-' + Date.now().toString().slice(-6);
+      const hash = `SS-VAL-${Math.floor(10000 + Math.random() * 90000)}-PR`;
+
+      const novoCert = {
+        id: certId,
+        usuarioId: userId,
+        veiculoIdSS,
+        dataConclusao: new Date().toISOString(),
+        dataValidade: new Date(Date.now() + 365*24*60*60*1000).toISOString(),
+        scoreQuiz: correctCount,
+        hashValidacao: hash
+      };
+
+      db.certificados.push(novoCert);
+      saveDB(db);
+
+      resultBox.innerHTML = `
+        <div style="font-size:3.5rem; margin-bottom:12px;">🎉</div>
+        <h2 style="font-family:var(--font-display); font-size:1.8rem; font-weight:800; color:var(--primary); margin-bottom:6px;">
+          Parabéns! Você foi Aprovado na Avaliação SS!
+        </h2>
+        <p style="font-size:1.05rem; color:var(--text); margin-bottom:18px;">
+          Você acertou <strong>${correctCount} de ${scenarios.length} questões (${pct}%)</strong> e demonstrou excelente compreensão das regras de segurança viária.
+        </p>
+        <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+          <a href="certificado.html" class="btn btn-primary btn-lg">
+            🎓 Visualizar Meu Certificado SS →
+          </a>
+          <a href="meu-ss.html" class="btn btn-secondary btn-lg">
+            👤 Ir para Minha Área (Meu SS) & QR Code →
+          </a>
+        </div>
+      `;
+
+      showToast('Certificação conquistada com sucesso!', 'success', 5000);
+    } else {
+      resultBox.innerHTML = `
+        <div style="font-size:3rem; margin-bottom:12px;">📚</div>
+        <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--danger); margin-bottom:6px;">
+          Você acertou ${correctCount} de ${scenarios.length} questões (${pct}%)
+        </h2>
+        <p style="font-size:0.95rem; color:var(--text-secondary); margin-bottom:18px; max-width:540px; margin-left:auto; margin-right:auto;">
+          Para garantir que você circule com total segurança, o programa exige no mínimo 4 acertos (80%). Revise as explicações acima e tente novamente!
+        </p>
+        <button class="btn btn-primary" onclick="resetQuiz()">
+          🔁 Tentar Novamente a Avaliação
+        </button>
+      `;
+
+      showToast('Revise os conteúdos e tente novamente para conquistar o certificado.', 'warning', 4500);
+    }
+
+    resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  window.resetQuiz = function() {
+    userAnswers = {};
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('quizActions').style.display = 'block';
+    renderQuiz();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  renderQuiz();
+</script>
+</body>
+</html>

@@ -3,318 +3,350 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cadastro — VE Consciente</title>
+  <title>Cadastro de Usuário e Veículo — SS Sustentabilidade & Segurança</title>
   <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛴</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23047857'/><text x='50%' y='68%' font-family='sans-serif' font-weight='900' font-size='50' fill='white' text-anchor='middle'>SS</text></svg>" />
 </head>
 <body>
 
 <header class="site-header" id="site-header"></header>
-<div class="progress-nav" id="progress-nav"></div>
 
-<main class="main-content">
+<main class="main-wrapper narrow">
 
-  <div class="section-title">📝 Etapa 1 — Cadastro</div>
-  <div class="section-desc">Preencha seus dados pessoais e as informações do seu veículo elétrico para iniciar o programa de conscientização.</div>
+  <div style="text-align:center; margin-bottom:28px;">
+    <div class="hero-badge" style="background:#E0F2FE; color:var(--secondary); border:1px solid #BAE6FD;">
+      Etapas 1 e 2 de 5 • Inscrição no Programa
+    </div>
+    <h1 style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--text); margin-bottom:6px;">
+      Cadastro de Condutor & Veículo
+    </h1>
+    <p style="color:var(--text-secondary); font-size:0.95rem;">
+      Preencha seus dados para criar sua conta no <strong>Meu SS</strong> e vincular seu veículo ao identificador digital.
+    </p>
+  </div>
 
-  <!-- DADOS PESSOAIS -->
-  <div class="card">
-    <div class="card-title">👤 Dados Pessoais</div>
-    <div class="card-subtitle">Informações necessárias para emissão do seu certificado.</div>
+  <!-- AVISO DE PRIVACIDADE LGPD -->
+  <div class="alert-box lgpd" style="margin-top:0;">
+    <span class="alert-icon">🔒</span>
+    <div>
+      <strong>Seus dados estão protegidos nos termos da LGPD (Lei nº 13.709/2018):</strong><br>
+      As informações preenchidas nesta etapa ficam salvas em ambiente seguro. <strong>Nenhum dado pessoal (como CPF, telefone ou endereço) será exibido no QR Code público do veículo.</strong>
+    </div>
+  </div>
 
-    <form id="form-pessoal">
+  <form id="cadastroForm">
+
+    <!-- SEÇÃO 1: DADOS DO USUÁRIO -->
+    <div class="card mb-24">
+      <div class="card-title">
+        <span>👤</span> 1. Dados Pessoais do Condutor
+      </div>
+      <div class="card-subtitle">
+        Crie seu acesso pessoal para gerenciar seu veículo e obter seu certificado.
+      </div>
+
       <div class="form-grid">
         <div class="form-group full">
-          <label for="nome">Nome Completo *</label>
-          <input type="text" id="nome" placeholder="Seu nome completo" />
-          <span class="field-error"></span>
+          <label for="u_nome">Nome Completo <span class="req">*</span></label>
+          <input type="text" id="u_nome" placeholder="Digite seu nome completo" required />
+          <span class="field-error-msg" id="err_nome"></span>
         </div>
+
         <div class="form-group">
-          <label for="cpf">CPF *</label>
-          <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" />
-          <span class="field-error"></span>
+          <label for="u_cpf">CPF <span class="req">*</span></label>
+          <input type="text" id="u_cpf" placeholder="000.000.000-00" maxlength="14" required />
+          <span class="field-error-msg" id="err_cpf"></span>
         </div>
+
         <div class="form-group">
-          <label for="nascimento">Data de Nascimento *</label>
-          <input type="date" id="nascimento" />
-          <span class="field-error"></span>
+          <label for="u_nascimento">Data de Nascimento <span class="req">*</span></label>
+          <input type="date" id="u_nascimento" required />
+          <span class="field-error-msg" id="err_nascimento"></span>
         </div>
+
+        <!-- SEÇÃO CONDICIONAL: RESPONSÁVEL LEGAL (SE MENOR DE 18 ANOS) -->
+        <div class="form-group full" id="secao_responsavel" style="display:none; background:#FFFBEB; border:2px dashed #F59E0B; border-radius:var(--radius-sm); padding:18px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <span style="font-size:1.4rem;">👨‍👧</span>
+            <div>
+              <strong style="color:#92400E; font-size:0.95rem;">Condutor Menor de 18 Anos Detectado</strong><br>
+              <span style="font-size:0.8rem; color:#B45309;">Conforme as regras do programa e legislação vigente, informe os dados do responsável legal.</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="resp_nome">Nome do Responsável Legal <span class="req">*</span></label>
+              <input type="text" id="resp_nome" placeholder="Nome completo do pai, mãe ou tutor" />
+            </div>
+            <div class="form-group">
+              <label for="resp_cpf">CPF do Responsável <span class="req">*</span></label>
+              <input type="text" id="resp_cpf" placeholder="000.000.000-00" maxlength="14" />
+            </div>
+            <div class="form-group">
+              <label for="resp_tel">Telefone do Responsável <span class="req">*</span></label>
+              <input type="tel" id="resp_tel" placeholder="(00) 00000-0000" />
+            </div>
+          </div>
+        </div>
+
         <div class="form-group">
-          <label for="telefone">Telefone / WhatsApp *</label>
-          <input type="tel" id="telefone" placeholder="(44) 99999-9999" maxlength="15" />
-          <span class="field-error"></span>
+          <label for="u_tel">Telefone / WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="u_tel" placeholder="(00) 00000-0000" maxlength="15" required />
+          <span class="field-error-msg" id="err_tel"></span>
         </div>
+
         <div class="form-group">
-          <label for="email">E-mail *</label>
-          <input type="email" id="email" placeholder="seu@email.com" />
-          <span class="field-error"></span>
+          <label for="u_email">E-mail <span class="req">*</span></label>
+          <input type="email" id="u_email" placeholder="seu@email.com" required />
+          <span class="field-error-msg" id="err_email"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="u_cidade">Cidade / UF <span class="req">*</span></label>
+          <input type="text" id="u_cidade" value="Campo Mourão - PR" required />
+        </div>
+
+        <div class="form-group">
+          <label for="u_bairro">Bairro</label>
+          <input type="text" id="u_bairro" placeholder="Ex: Centro, Lar Paraná, etc." />
+        </div>
+
+        <div class="form-group full">
+          <label for="u_senha">Crie uma Senha para acessar o "Meu SS" <span class="req">*</span></label>
+          <input type="password" id="u_senha" placeholder="Mínimo 4 caracteres (usada para entrar na sua área de usuário)" required />
+          <span class="field-error-msg" id="err_senha"></span>
         </div>
       </div>
-    </form>
-  </div>
-
-  <!-- TIPO DE VEÍCULO -->
-  <div class="card">
-    <div class="card-title">🛴 Tipo de Veículo Elétrico</div>
-    <div class="card-subtitle">Selecione a categoria do seu veículo para prosseguir.</div>
-
-    <div class="vehicle-type-grid" id="vehicle-types">
-      <div class="vehicle-card" data-type="patinete">
-        <div class="emoji">🛴</div>
-        <div class="name">Patinete Elétrico</div>
-      </div>
-      <div class="vehicle-card" data-type="bicicleta">
-        <div class="emoji">🚲</div>
-        <div class="name">Bicicleta Elétrica</div>
-      </div>
-      <div class="vehicle-card" data-type="monociclo">
-        <div class="emoji">🔄</div>
-        <div class="name">Monociclo Elétrico</div>
-      </div>
-      <div class="vehicle-card" data-type="triciclo">
-        <div class="emoji">🛺</div>
-        <div class="name">Triciclo Elétrico</div>
-      </div>
-      <div class="vehicle-card" data-type="outro">
-        <div class="emoji">⚡</div>
-        <div class="name">Outro Veículo Elétrico</div>
-      </div>
     </div>
-    <span class="field-error" id="type-error"></span>
-  </div>
 
-  <!-- DADOS DO VEÍCULO -->
-  <div class="card" id="vehicle-data-card" style="display:none;">
-    <div class="card-title">⚙️ Dados do Veículo</div>
-    <div class="card-subtitle">Informe as características do seu veículo elétrico.</div>
+    <!-- SEÇÃO 2: DADOS DO VEÍCULO -->
+    <div class="card mb-24">
+      <div class="card-title">
+        <span>🛴</span> 2. Cadastro do Veículo
+      </div>
+      <div class="card-subtitle">
+        Informe os dados do veículo de duas rodas que receberá o identificador SS.
+      </div>
 
-    <div class="form-grid">
-      <div class="form-group full">
-        <label for="modelo">Modelo do Veículo *</label>
-        <select id="modelo">
-          <option value="">Selecione o tipo de veículo primeiro...</option>
-        </select>
-        <span class="field-error"></span>
+      <label>Selecione a Categoria do Veículo: <span class="req">*</span></label>
+      <div class="vehicle-selector-grid" id="tipoVeiculoSelector">
+        <div class="v-select-card selected" data-type="patinete" data-label="Patinete Elétrico">
+          <span class="v-emoji">🛴</span>
+          <span class="v-label">Patinete Elétrico</span>
+        </div>
+        <div class="v-select-card" data-type="bike" data-label="Bicicleta Elétrica / Convencional">
+          <span class="v-emoji">🚲</span>
+          <span class="v-label">Bicicleta Elétrica</span>
+        </div>
+        <div class="v-select-card" data-type="motocicleta" data-label="Motocicleta">
+          <span class="v-emoji">🏍️</span>
+          <span class="v-label">Motocicleta</span>
+        </div>
+        <div class="v-select-card" data-type="ciclomotor" data-label="Ciclomotor / Scooter">
+          <span class="v-emoji">🛵</span>
+          <span class="v-label">Ciclomotor / Scooter</span>
+        </div>
+        <div class="v-select-card" data-type="monociclo" data-label="Monociclo Elétrico">
+          <span class="v-emoji">🔄</span>
+          <span class="v-label">Monociclo Elétrico</span>
+        </div>
+        <div class="v-select-card" data-type="outro" data-label="Outro Veículo">
+          <span class="v-emoji">⚡</span>
+          <span class="v-label">Outro Autopropelido</span>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="modelo-outro" id="label-modelo-outro" style="display:none;">Especifique o modelo *</label>
-        <input type="text" id="modelo-outro" placeholder="Ex: Marca + Modelo" style="display:none;" />
-        <span class="field-error" id="modelo-outro-error"></span>
-      </div>
-      <div class="form-group">
-        <label for="cor">Cor do Veículo *</label>
-        <select id="cor">
-          <option value="">Selecione...</option>
-          <option>Preto</option>
-          <option>Branco</option>
-          <option>Cinza / Prata</option>
-          <option>Vermelho</option>
-          <option>Azul</option>
-          <option>Verde</option>
-          <option>Amarelo</option>
-          <option>Rosa</option>
-          <option>Roxo / Vinho</option>
-          <option>Outro</option>
-        </select>
-        <span class="field-error"></span>
-      </div>
-      <div class="form-group">
-        <label for="num-serie">Número de Série / ID (opcional)</label>
-        <input type="text" id="num-serie" placeholder="Consta no manual ou chassi" />
-      </div>
-      <div class="form-group">
-        <label for="vel-max">Velocidade Máxima Configurada (km/h) *</label>
-        <input type="number" id="vel-max" placeholder="Ex: 25" min="1" max="80" />
-        <span class="field-error"></span>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="v_marca">Marca / Fabricante <span class="req">*</span></label>
+          <input type="text" id="v_marca" placeholder="Ex: Xiaomi, Honda, Caloi, Move Eco, etc." required />
+          <span class="field-error-msg" id="err_marca"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="v_modelo">Modelo <span class="req">*</span></label>
+          <input type="text" id="v_modelo" placeholder="Ex: Mi Pro 2, CG 160, E-Vibe, etc." required />
+          <span class="field-error-msg" id="err_modelo"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="v_cor">Cor Predominante <span class="req">*</span></label>
+          <input type="text" id="v_cor" placeholder="Ex: Preto, Vermelho, Branco, Cinza" required />
+          <span class="field-error-msg" id="err_cor"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="v_chassi">Nº de Série, Chassi ou Identificação (se houver)</label>
+          <input type="text" id="v_chassi" placeholder="Geralmente gravado no chassi ou manual" />
+        </div>
+
+        <div class="form-group full">
+          <label for="v_caracteristicas">Características de Identificação Visual (opcional)</label>
+          <textarea id="v_caracteristicas" rows="2" placeholder="Ex: Adesivo azul na lateral, baú traseiro preto, suporte para celular, pequenos arranhões no garfo. Isso ajuda muito na recuperação em caso de perda ou furto!"></textarea>
+        </div>
       </div>
     </div>
 
-    <!-- CHECKBOX DESBLOQUEADO -->
-    <div class="checkbox-group mt-16" id="unlock-warning" style="display:none;">
-      <span style="font-size:1.5rem;">⚠️</span>
-      <div>
-        <strong style="color:var(--danger);">ATENÇÃO — Veículo Possivelmente Desbloqueado</strong><br>
-        <span style="font-size:0.85rem;">Patinetes elétricos têm limite legal de <strong>32 km/h</strong> em vias públicas. Velocidade acima disso indica que o veículo pode ter sido desbloqueado (destravado), o que é <strong>ilegal</strong> e pode resultar em apreensão do veículo pelo DETRAN.</span>
-      </div>
+    <!-- BOTÕES DE SUBMISSÃO -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <a href="index.html" class="btn btn-outline">
+        ← Voltar ao Início
+      </a>
+      <button type="submit" class="btn btn-primary btn-lg" id="btnSalvar">
+        Salvar Cadastro e Ir para o Curso Online →
+      </button>
     </div>
 
-    <div class="checkbox-group mt-16">
-      <input type="checkbox" id="desbloqueado" />
-      <label for="desbloqueado">
-        <strong>Meu veículo foi desbloqueado / destravado para velocidades acima de 32 km/h.</strong>
-        <br><span style="font-size:0.82rem; font-weight:400;">Marque honestamente. Esta informação aparecerá no QR Code para verificação pelo DETRAN.</span>
-      </label>
-    </div>
-
-    <div class="info-box yellow mt-16">
-      <span>📌</span>
-      <span>Ao prosseguir, você declara que as informações prestadas são verdadeiras e está ciente das regras de circulação de veículos elétricos.</span>
-    </div>
-  </div>
-
-  <!-- BOTÃO AVANÇAR -->
-  <div style="display:flex; justify-content:flex-end; gap:16px; margin-top:8px;">
-    <a href="index.html" class="btn btn-outline">← Voltar</a>
-    <button class="btn btn-primary btn-lg" id="btn-avancar">
-      Próxima Etapa: Tutorial →
-    </button>
-  </div>
+  </form>
 
 </main>
 
 <footer class="site-footer" id="site-footer"></footer>
 
 <script type="module">
-import { renderHeader, renderFooter, renderProgressBar, updateSession, getSession, showToast, validateField, maskCPF, maskPhone } from './assets/js/app.js';
+  import {
+    renderHeader, renderFooter, getDB, saveDB, generateSSId,
+    maskCPF, maskPhone, isUnderAge, showToast
+  } from './assets/js/app.js';
 
-renderHeader();
-renderFooter();
-renderProgressBar(1);
+  renderHeader('cadastro');
+  renderFooter();
 
-// Restaura sessão parcial
-const session = getSession();
-if (session.nome) document.getElementById('nome').value = session.nome;
-if (session.cpf) document.getElementById('cpf').value = session.cpf;
-if (session.nascimento) document.getElementById('nascimento').value = session.nascimento;
-if (session.telefone) document.getElementById('telefone').value = session.telefone;
-if (session.email) document.getElementById('email').value = session.email;
+  // Aplica máscaras
+  const cpfInput = document.getElementById('u_cpf');
+  const telInput = document.getElementById('u_tel');
+  const respCpfInput = document.getElementById('resp_cpf');
+  const respTelInput = document.getElementById('resp_tel');
+  const nascInput = document.getElementById('u_nascimento');
 
-maskCPF(document.getElementById('cpf'));
-maskPhone(document.getElementById('telefone'));
+  maskCPF(cpfInput);
+  maskPhone(telInput);
+  maskCPF(respCpfInput);
+  maskPhone(respTelInput);
 
-// Modelos por tipo
-const modelosPorTipo = {
-  patinete: [
-    'Xiaomi Mi Scooter M365', 'Xiaomi Mi Scooter 4', 'Xiaomi M365 Pro',
-    'Mibo V8', 'Mibo Pro', 'Multilaser ES256', 'Multilaser ES302',
-    'Move Eco ME-40', 'Elofun EL06', 'Hover-1 Alpha',
-    'Ninebot E25', 'Ninebot Max G30', 'Genérico / Outro'
-  ],
-  bicicleta: [
-    'Caloi E-Vibe City', 'Sense Impact E-Trail', 'Sense E-Trail 2024',
-    'Oggi Big Wheel E-Bike', 'Kit Motor Traseiro (conversão)',
-    'Kit Motor Dianteiro (conversão)', 'Genérica / Outra'
-  ],
-  monociclo: [
-    'Kingsong S18', 'Inmotion V11', 'Gotway Begode',
-    'Ninebot One Z10', 'Outro modelo'
-  ],
-  triciclo: [
-    'Triciclo Elétrico para Carga', 'Triciclo Elétrico de Passeio',
-    'Triciclo Adaptado', 'Outro modelo'
-  ],
-  outro: ['Outro Veículo Elétrico']
-};
-
-// Seleção de tipo de veículo
-let selectedType = session.tipoVeiculo || null;
-
-document.querySelectorAll('.vehicle-card').forEach(card => {
-  card.addEventListener('click', () => {
-    document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    selectedType = card.dataset.type;
-
-    // Popula modelos
-    const select = document.getElementById('modelo');
-    const modelos = modelosPorTipo[selectedType] || [];
-    select.innerHTML = '<option value="">Selecione o modelo...</option>' +
-      modelos.map(m => `<option value="${m}">${m}</option>`).join('');
-
-    document.getElementById('vehicle-data-card').style.display = 'block';
-    document.getElementById('type-error').textContent = '';
-
-    // Restaura modelo salvo
-    if (session.modeloVeiculo) select.value = session.modeloVeiculo;
+  // Monitora data de nascimento para exibir seção de responsável legal
+  nascInput.addEventListener('change', () => {
+    const isUnder = isUnderAge(nascInput.value);
+    const respSec = document.getElementById('secao_responsavel');
+    if (isUnder) {
+      respSec.style.display = 'block';
+      showToast('Condutor menor de 18 anos: preencha os dados do responsável legal.', 'info');
+    } else {
+      respSec.style.display = 'none';
+    }
   });
 
-  // Restaura seleção
-  if (card.dataset.type === selectedType) card.click();
-});
+  // Seletor de Tipo de Veículo
+  let selectedType = 'patinete';
+  let selectedLabel = 'Patinete Elétrico';
 
-// Aviso velocidade desbloqueada
-const velInput = document.getElementById('vel-max');
-const unlockWarn = document.getElementById('unlock-warning');
-if (session.velMax) velInput.value = session.velMax;
-
-velInput.addEventListener('input', () => {
-  const v = parseInt(velInput.value);
-  unlockWarn.style.display = (v > 32) ? 'flex' : 'none';
-});
-
-if (session.desbloqueado) document.getElementById('desbloqueado').checked = true;
-if (session.cor) document.getElementById('cor').value = session.cor;
-if (session.numSerie) document.getElementById('num-serie').value = session.numSerie;
-
-// Modelo "Genérico / Outro"
-document.getElementById('modelo').addEventListener('change', function() {
-  const isOutro = this.value.toLowerCase().includes('outro') || this.value.toLowerCase().includes('outr');
-  document.getElementById('label-modelo-outro').style.display = isOutro ? '' : 'none';
-  document.getElementById('modelo-outro').style.display = isOutro ? '' : 'none';
-});
-
-// Botão Avançar
-document.getElementById('btn-avancar').addEventListener('click', () => {
-  const nome = document.getElementById('nome');
-  const cpf = document.getElementById('cpf');
-  const nascimento = document.getElementById('nascimento');
-  const telefone = document.getElementById('telefone');
-  const email = document.getElementById('email');
-  const modelo = document.getElementById('modelo');
-  const cor = document.getElementById('cor');
-  const velMax = document.getElementById('vel-max');
-
-  let valid = true;
-
-  valid &= validateField(nome, { required: true, minLength: 3 });
-  valid &= validateField(cpf, { required: true, cpf: true });
-  valid &= validateField(nascimento, { required: true });
-  valid &= validateField(telefone, { required: true });
-  valid &= validateField(email, { required: true, email: true });
-  valid &= validateField(velMax, { required: true });
-
-  if (!selectedType) {
-    document.getElementById('type-error').textContent = 'Selecione o tipo de veículo.';
-    valid = false;
-  }
-
-  if (selectedType) {
-    valid &= validateField(modelo, { required: true });
-    valid &= validateField(cor, { required: true });
-  }
-
-  const modeloOutro = document.getElementById('modelo-outro');
-  if (modeloOutro.style.display !== 'none') {
-    valid &= validateField(modeloOutro, { required: true });
-  }
-
-  if (!valid) {
-    showToast('Preencha todos os campos obrigatórios corretamente.', 'error');
-    return;
-  }
-
-  let modeloFinal = modelo.value;
-  if (modeloOutro.style.display !== 'none' && modeloOutro.value.trim()) {
-    modeloFinal = modeloOutro.value.trim();
-  }
-
-  updateSession({
-    nome: nome.value.trim(),
-    cpf: cpf.value.trim(),
-    nascimento: nascimento.value,
-    telefone: telefone.value.trim(),
-    email: email.value.trim(),
-    tipoVeiculo: selectedType,
-    modeloVeiculo: modeloFinal,
-    cor: cor.value,
-    numSerie: document.getElementById('num-serie').value.trim(),
-    velMax: velMax.value,
-    desbloqueado: document.getElementById('desbloqueado').checked,
-    maxStep: 1
+  const selectorCards = document.querySelectorAll('.v-select-card');
+  selectorCards.forEach(card => {
+    card.addEventListener('click', () => {
+      selectorCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedType = card.dataset.type;
+      selectedLabel = card.dataset.label;
+    });
   });
 
-  window.location.href = 'tutorial.html';
-});
+  // Submissão do Formulário
+  const form = document.getElementById('cadastroForm');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nome = document.getElementById('u_nome').value.trim();
+    const cpf = cpfInput.value.trim();
+    const nascimento = nascInput.value;
+    const tel = telInput.value.trim();
+    const email = document.getElementById('u_email').value.trim().toLowerCase();
+    const cidade = document.getElementById('u_cidade').value.trim();
+    const bairro = document.getElementById('u_bairro').value.trim();
+    const senha = document.getElementById('u_senha').value.trim();
+
+    const marca = document.getElementById('v_marca').value.trim();
+    const modelo = document.getElementById('v_modelo').value.trim();
+    const cor = document.getElementById('v_cor').value.trim();
+    const chassi = document.getElementById('v_chassi').value.trim();
+    const caracteristicas = document.getElementById('v_caracteristicas').value.trim();
+
+    if (senha.length < 4) {
+      showToast('A senha deve ter no mínimo 4 caracteres.', 'error');
+      document.getElementById('u_senha').focus();
+      return;
+    }
+
+    const menor = isUnderAge(nascimento);
+    let responsavel = null;
+    if (menor) {
+      const respNome = document.getElementById('resp_nome').value.trim();
+      const respCpf = respCpfInput.value.trim();
+      const respTel = respTelInput.value.trim();
+
+      if (!respNome || !respCpf || !respTel) {
+        showToast('Preencha os dados completos do responsável legal.', 'error');
+        return;
+      }
+      responsavel = {
+        nome: respNome,
+        cpf: respCpf,
+        telefone: respTel
+      };
+    }
+
+    // Salva no banco de dados local
+    const db = getDB();
+
+    // Cria novo usuário
+    const userId = 'usr_' + Date.now();
+    const novoUsuario = {
+      id: userId,
+      nome,
+      cpf,
+      nascimento,
+      email,
+      telefone: tel,
+      endereco: { cidade, bairro },
+      senha,
+      responsavel,
+      dataCriacao: new Date().toISOString()
+    };
+    db.usuarios.push(novoUsuario);
+
+    // Cria novo veículo com identificador único SS (ex: SS-X9K2P4)
+    const idSS = generateSSId();
+    const novoVeiculo = {
+      idSS,
+      usuarioId: userId,
+      tipo: selectedType,
+      tipoLabel: selectedLabel,
+      marca,
+      modelo,
+      cor,
+      chassi: chassi || 'Não informado',
+      caracteristicas: caracteristicas || '',
+      status: 'ATIVO',
+      dataCadastro: new Date().toISOString(),
+      detalhesRoubo: null
+    };
+    db.veiculos.push(novoVeiculo);
+
+    saveDB(db);
+
+    // Salva na sessão ativa do usuário
+    localStorage.setItem('ss_user_session', JSON.stringify({
+      id: userId,
+      email: novoUsuario.email,
+      veiculoIdSS: idSS
+    }));
+
+    showToast(`Cadastro realizado com sucesso! Seu código é ${idSS}.`, 'success');
+
+    // Redireciona para o curso online
+    setTimeout(() => {
+      window.location.href = 'curso.html';
+    }, 1200);
+  });
 </script>
 </body>
 </html>

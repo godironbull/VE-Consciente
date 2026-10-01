@@ -1,124 +1,318 @@
-// ================================================
-// VE CONSCIENTE — Campo Mourão
-// Lógica Principal da Aplicação
-// ================================================
+/**
+ * SS — SUSTENTABILIDADE & SEGURANÇA
+ * Módulo Principal: Dados, Autenticação, Proteção LGPD e QR Code
+ */
 
-const DB_KEY = 've_consciente_db';
+const DB_KEY = 'ss_plataforma_db';
+const USER_SESSION_KEY = 'ss_user_session';
+const AGENT_SESSION_KEY = 'ss_agent_session';
+const ONBOARDING_KEY = 'ss_onboarding_data';
 
-// ── Utilitários de banco (localStorage) ──────────────────────────────────────
+// ── BANCO DE DADOS LOCAL (COM DADOS SEED DE DEMOSTRATIVO) ───────────────────
+function initDefaultDB() {
+  const now = new Date().toISOString();
+  return {
+    usuarios: [
+      {
+        id: 'usr_001',
+        nome: 'João da Silva Santos',
+        cpf: '123.456.789-00',
+        nascimento: '1998-05-14',
+        email: 'joao.silva@exemplo.com',
+        telefone: '(44) 99887-1122',
+        endereco: { cidade: 'Campo Mourão', uf: 'PR', bairro: 'Centro' },
+        senha: '123',
+        responsavel: null,
+        dataCriacao: now
+      },
+      {
+        id: 'usr_002',
+        nome: 'Marcos Vinicius de Souza',
+        cpf: '987.654.321-99',
+        nascimento: '2001-11-20',
+        email: 'marcos.souza@exemplo.com',
+        telefone: '(44) 99123-4567',
+        endereco: { cidade: 'Campo Mourão', uf: 'PR', bairro: 'Jardim Lar Paraná' },
+        senha: '123',
+        responsavel: null,
+        dataCriacao: now
+      }
+    ],
+    veiculos: [
+      {
+        idSS: 'SS-48291',
+        usuarioId: 'usr_001',
+        tipo: 'patinete',
+        tipoLabel: 'Patinete Elétrico',
+        marca: 'Xiaomi',
+        modelo: 'Mi Electric Scooter Pro 2',
+        cor: 'Preto com detalhes vermelhos',
+        chassi: 'SN-XIAO-99812A',
+        caracteristicas: 'Adesivo refletor verde no garfo dianteiro',
+        status: 'ATIVO', // 'ATIVO' | 'ROUBADO_FURTADO' | 'EM_MANUTENCAO'
+        dataCadastro: now,
+        detalhesRoubo: null
+      },
+      {
+        idSS: 'SS-A7F29K',
+        usuarioId: 'usr_002',
+        tipo: 'motocicleta',
+        tipoLabel: 'Motocicleta',
+        marca: 'Honda',
+        modelo: 'CG 160 Start',
+        cor: 'Vermelha',
+        chassi: '9C2KC1600NR123456',
+        caracteristicas: 'Bagageiro traseiro preto reforçado',
+        status: 'ROUBADO_FURTADO', // Exemplo demonstrativo de alerta de roubo
+        dataCadastro: now,
+        detalhesRoubo: {
+          dataHora: now,
+          localAproximado: 'Av. Irmãos Pereira, Centro, Campo Mourão - PR',
+          boletimOcorrencia: 'BO 2026/089421',
+          observacoes: 'Subtraído enquanto estacionado próximo à praça central.'
+        }
+      }
+    ],
+    certificados: [
+      {
+        id: 'CERT-SS-001',
+        usuarioId: 'usr_001',
+        veiculoIdSS: 'SS-48291',
+        dataConclusao: now,
+        dataValidade: new Date(Date.now() + 365*24*60*60*1000).toISOString(),
+        scoreQuiz: 5,
+        hashValidacao: 'SS-VAL-88274-CMO'
+      }
+    ],
+    agentesAutorizados: [
+      { matricula: 'DETRAN-2026', orgao: 'DETRAN-PR', nome: 'Agente Silva', senha: 'detran2026' },
+      { matricula: 'PM-190', orgao: 'Polícia Militar', nome: 'Cabo Oliveira', senha: 'pm190' },
+      { matricula: 'GM-153', orgao: 'Guarda Municipal', nome: 'Inspetor Carlos', senha: 'guarda2026' },
+      { matricula: 'PREF-01', orgao: 'Prefeitura Municipal', nome: 'Fiscal Municipal', senha: 'pref2026' }
+    ],
+    ocorrenciasAgentes: []
+  };
+}
 
 export function getDB() {
   const raw = localStorage.getItem(DB_KEY);
-  return raw ? JSON.parse(raw) : { condutores: {}, nextSeq: 1 };
+  if (!raw) {
+    const defaultDB = initDefaultDB();
+    localStorage.setItem(DB_KEY, JSON.stringify(defaultDB));
+    return defaultDB;
+  }
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error('Erro ao ler DB:', e);
+    const defaultDB = initDefaultDB();
+    localStorage.setItem(DB_KEY, JSON.stringify(defaultDB));
+    return defaultDB;
+  }
 }
 
-function saveDB(db) {
+export function saveDB(db) {
   localStorage.setItem(DB_KEY, JSON.stringify(db));
 }
 
-export function saveCondutor(condutor) {
+// ── GERADOR DE IDENTIFICADOR ÚNICO SS ───────────────────────────────────────
+export function generateSSId() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Sem 0, O, 1, I para evitar confusão visual
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `SS-${code}`;
+}
+
+// ── LGPD: CONSULTA PÚBLICA (ESTRITAMENTE SEM DADOS PESSOAIS) ────────────────
+export function getPublicVehicleData(idSS) {
   const db = getDB();
-  db.condutores[condutor.id] = condutor;
+  const veiculo = db.veiculos.find(v => v.idSS.toUpperCase() === idSS.toUpperCase());
+  if (!veiculo) return null;
+
+  // Retorna APENAS dados do veículo e status de segurança.
+  // Protege 100% o nome, CPF, telefone e endereço do proprietário!
+  return {
+    idSS: veiculo.idSS,
+    tipo: veiculo.tipo,
+    tipoLabel: veiculo.tipoLabel || veiculo.tipo,
+    marca: veiculo.marca,
+    modelo: veiculo.modelo,
+    cor: veiculo.cor,
+    caracteristicas: veiculo.caracteristicas || '',
+    status: veiculo.status,
+    dataCadastro: veiculo.dataCadastro,
+    detalhesRoubo: veiculo.status === 'ROUBADO_FURTADO' ? veiculo.detalhesRoubo : null
+  };
+}
+
+// ── ÁREA DE AGENTES AUTORIZADOS (DADOS COMPLETOS COM AUDITORIA) ─────────────
+export function getAuthorizedVehicleData(idSS) {
+  const db = getDB();
+  const veiculo = db.veiculos.find(v => v.idSS.toUpperCase() === idSS.toUpperCase());
+  if (!veiculo) return null;
+
+  const proprietario = db.usuarios.find(u => u.id === veiculo.usuarioId);
+  const certificado = db.certificados.find(c => c.veiculoIdSS === veiculo.idSS);
+
+  return {
+    veiculo,
+    proprietario: proprietario ? {
+      id: proprietario.id,
+      nome: proprietario.nome,
+      cpf: proprietario.cpf,
+      nascimento: proprietario.nascimento,
+      telefone: proprietario.telefone,
+      email: proprietario.email,
+      endereco: proprietario.endereco,
+      responsavel: proprietario.responsavel
+    } : null,
+    certificado: certificado || null
+  };
+}
+
+// ── SISTEMA DE ALERTA DE ROUBO / FURTO (MEU SS) ─────────────────────────────
+export function toggleTheftAlert(idSS, isStolen, alertDetails = null) {
+  const db = getDB();
+  const vIndex = db.veiculos.findIndex(v => v.idSS === idSS);
+  if (vIndex === -1) return false;
+
+  if (isStolen) {
+    db.veiculos[vIndex].status = 'ROUBADO_FURTADO';
+    db.veiculos[vIndex].detalhesRoubo = {
+      dataHora: new Date().toISOString(),
+      localAproximado: alertDetails?.local || 'Não informado',
+      boletimOcorrencia: alertDetails?.bo || 'Em andamento',
+      observacoes: alertDetails?.obs || ''
+    };
+  } else {
+    db.veiculos[vIndex].status = 'ATIVO';
+    db.veiculos[vIndex].detalhesRoubo = null;
+  }
+
   saveDB(db);
+  return true;
 }
 
-export function getCondutor(id) {
+// ── AUTENTICAÇÃO DO USUÁRIO ────────────────────────────────────────────────
+export function getCurrentUser() {
+  const raw = localStorage.getItem(USER_SESSION_KEY);
+  if (!raw) return null;
+  try {
+    const session = JSON.parse(raw);
+    const db = getDB();
+    return db.usuarios.find(u => u.id === session.id) || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export function loginUser(identifier, senha) {
   const db = getDB();
-  return db.condutores[id] || null;
+  const cleanId = identifier.trim().toLowerCase();
+  const cleanCpf = identifier.replace(/\D/g, '');
+
+  const user = db.usuarios.find(u => {
+    const uCpf = u.cpf.replace(/\D/g, '');
+    return (u.email.toLowerCase() === cleanId || (cleanCpf && uCpf === cleanCpf)) && u.senha === senha;
+  });
+
+  if (user) {
+    localStorage.setItem(USER_SESSION_KEY, JSON.stringify({ id: user.id, email: user.email }));
+    return { success: true, user };
+  }
+  return { success: false, message: 'E-mail/CPF ou senha incorretos.' };
 }
 
-export function getAllCondutores() {
+export function logoutUser() {
+  localStorage.removeItem(USER_SESSION_KEY);
+  window.location.href = 'index.html';
+}
+
+// ── AUTENTICAÇÃO DE AGENTES AUTORIZADOS ────────────────────────────────────
+export function getCurrentAgent() {
+  const raw = localStorage.getItem(AGENT_SESSION_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    return null;
+  }
+}
+
+export function loginAgent(matricula, senha) {
   const db = getDB();
-  return Object.values(db.condutores);
+  const agent = db.agentesAutorizados.find(a => 
+    a.matricula.toUpperCase() === matricula.trim().toUpperCase() && a.senha === senha
+  );
+
+  if (agent) {
+    const session = {
+      matricula: agent.matricula,
+      orgao: agent.orgao,
+      nome: agent.nome,
+      loginAt: new Date().toISOString()
+    };
+    localStorage.setItem(AGENT_SESSION_KEY, JSON.stringify(session));
+    return { success: true, agent: session };
+  }
+  return { success: false, message: 'Matrícula ou senha institucional incorreta.' };
 }
 
-export function countCondutores() {
-  return Object.keys(getDB().condutores).length;
+export function logoutAgent() {
+  localStorage.removeItem(AGENT_SESSION_KEY);
+  window.location.href = 'agentes.html';
 }
 
-export function generateId() {
-  const db = getDB();
-  const seq = String(db.nextSeq).padStart(5, '0');
-  db.nextSeq++;
-  saveDB(db);
-  return `CMO-${new Date().getFullYear()}-${seq}`;
-}
-
-// ── Dados de sessão (etapas) ──────────────────────────────────────────────────
-
-const SESSION_KEY = 've_session';
-
-export function getSession() {
-  const raw = sessionStorage.getItem(SESSION_KEY);
+// ── FLUXO DE ONBOARDING (CADASTRO / CURSO / QUIZ) ───────────────────────────
+export function getOnboardingData() {
+  const raw = sessionStorage.getItem(ONBOARDING_KEY);
   return raw ? JSON.parse(raw) : {};
 }
 
-export function updateSession(data) {
-  const session = getSession();
-  const updated = { ...session, ...data };
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify(updated));
+export function updateOnboardingData(data) {
+  const current = getOnboardingData();
+  const updated = { ...current, ...data };
+  sessionStorage.setItem(ONBOARDING_KEY, JSON.stringify(updated));
   return updated;
 }
 
-export function clearSession() {
-  sessionStorage.removeItem(SESSION_KEY);
+export function clearOnboardingData() {
+  sessionStorage.removeItem(ONBOARDING_KEY);
 }
 
-// ── Toast notifications ───────────────────────────────────────────────────────
+// ── RESOLUÇÃO DO LINK DO QR CODE ───────────────────────────────────────────
+export function getQRCodeUrl(idSS) {
+  // Constrói URL pública absoluta para o consulta.html
+  const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
+  return `${base}/consulta.html?id=${encodeURIComponent(idSS)}`;
+}
 
-export function showToast(msg, type = 'info', duration = 3500) {
-  const existing = document.querySelector('.toast');
-  if (existing) existing.remove();
+// ── NOTIFICAÇÕES TOAST ─────────────────────────────────────────────────────
+export function showToast(message, type = 'info', duration = 3800) {
+  const old = document.querySelector('.toast-msg');
+  if (old) old.remove();
 
-  const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+  const icons = {
+    success: '✅',
+    error: '❌',
+    warning: '⚠️',
+    info: 'ℹ️'
+  };
+
   const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
+  toast.className = `toast-msg ${type}`;
+  toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
   document.body.appendChild(toast);
 
   setTimeout(() => {
-    toast.style.animation = 'slideOut 0.3s ease forwards';
+    toast.style.animation = 'slideToastOut 0.3s ease forwards';
     setTimeout(() => toast.remove(), 300);
   }, duration);
 }
 
-// ── Validação de campos ───────────────────────────────────────────────────────
-
-export function validateField(input, rules = {}) {
-  const val = input.value.trim();
-  let error = '';
-
-  if (rules.required && !val) error = 'Este campo é obrigatório.';
-  else if (rules.minLength && val.length < rules.minLength)
-    error = `Mínimo ${rules.minLength} caracteres.`;
-  else if (rules.cpf && !validarCPF(val))
-    error = 'CPF inválido. Digite apenas os números.';
-  else if (rules.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
-    error = 'E-mail inválido.';
-
-  const errEl = input.closest('.form-group')?.querySelector('.field-error');
-  if (errEl) errEl.textContent = error;
-  input.classList.toggle('error', !!error);
-  return !error;
-}
-
-function validarCPF(cpf) {
-  cpf = cpf.replace(/\D/g, '');
-  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-  let sum = 0;
-  for (let i = 0; i < 9; i++) sum += parseInt(cpf[i]) * (10 - i);
-  let rem = (sum * 10) % 11;
-  if (rem === 10 || rem === 11) rem = 0;
-  if (rem !== parseInt(cpf[9])) return false;
-  sum = 0;
-  for (let i = 0; i < 10; i++) sum += parseInt(cpf[i]) * (11 - i);
-  rem = (sum * 10) % 11;
-  if (rem === 10 || rem === 11) rem = 0;
-  return rem === parseInt(cpf[10]);
-}
-
-// ── Formatar CPF enquanto digita ──────────────────────────────────────────────
-
+// ── FORMATAÇÕES E MÁSCARAS ─────────────────────────────────────────────────
 export function maskCPF(input) {
   input.addEventListener('input', () => {
     let v = input.value.replace(/\D/g, '').slice(0, 11);
@@ -132,94 +326,146 @@ export function maskCPF(input) {
 export function maskPhone(input) {
   input.addEventListener('input', () => {
     let v = input.value.replace(/\D/g, '').slice(0, 11);
-    v = v.replace(/(\d{2})(\d)/, '($1) $2');
-    v = v.replace(/(\d{5})(\d{4})$/, '$1-$2');
+    if (v.length > 10) {
+      v = v.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else {
+      v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    }
     input.value = v;
   });
 }
 
-// ── Barra de progresso ────────────────────────────────────────────────────────
-
-export function renderProgressBar(activeStep) {
-  const container = document.getElementById('progress-nav');
-  if (!container) return;
-
-  const steps = [
-    { n: 1, label: 'Cadastro', page: 'cadastro.html' },
-    { n: 2, label: 'Tutorial',  page: 'tutorial.html' },
-    { n: 3, label: 'Regras',    page: 'regras.html' },
-    { n: 4, label: 'QR Code',   page: 'certificado.html' },
-  ];
-
-  const session = getSession();
-  const maxDone = session.maxStep || 0;
-
-  let html = '<div class="progress-nav-inner">';
-  steps.forEach((step, idx) => {
-    const isDone = step.n < activeStep;
-    const isActive = step.n === activeStep;
-    const circleClass = isDone ? 'done' : isActive ? 'active' : '';
-    const labelClass = isDone ? 'done' : isActive ? 'active' : '';
-    const icon = isDone ? '✓' : step.n;
-
-    html += `
-      <div class="step-item">
-        <div class="step-circle ${circleClass}">${icon}</div>
-        <span class="step-label ${labelClass}">${step.label}</span>
-      </div>`;
-
-    if (idx < steps.length - 1) {
-      html += `<div class="step-line ${isDone ? 'done' : ''}"></div>`;
-    }
-  });
-
-  html += '</div>';
-  container.innerHTML = html;
+export function isUnderAge(birthDateString) {
+  if (!birthDateString) return false;
+  const today = new Date();
+  const birthDate = new Date(birthDateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age < 18;
 }
 
-// ── Header padrão ─────────────────────────────────────────────────────────────
-
-export function renderHeader() {
+// ── RENDERIZAÇÃO DE HEADER E FOOTER PADRÃO ──────────────────────────────────
+export function renderHeader(activePage = '') {
   const el = document.getElementById('site-header');
   if (!el) return;
+
+  const currentUser = getCurrentUser();
+  const currentAgent = getCurrentAgent();
+
   el.innerHTML = `
-    <div class="header-inner">
-      <div class="header-logos">
-        <div class="logo-badge">
-          <span class="icon">🏛️</span>
-          <span>Prefeitura de<br>Campo Mourão</span>
+    <div class="header-container">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-emblem">SS</div>
+        <div class="brand-info">
+          <div class="brand-title"><span class="s1">Sustentabilidade</span> & <span class="s2">Segurança</span></div>
+          <div class="brand-subtitle">Plataforma Educacional e de Identificação</div>
         </div>
-        <div class="logo-divider"></div>
-        <div class="logo-badge">
-          <span class="icon">🚔</span>
-          <span>DETRAN-PR</span>
-        </div>
-      </div>
-      <div class="header-title">
-        <h1>🛴 VE Consciente</h1>
-        <p>Programa de Conscientização para Veículos Elétricos</p>
-      </div>
-      <nav class="header-nav">
-        <a href="index.html" class="nav-btn">🏠 Início</a>
-        <a href="detran.html" class="nav-btn detran">🔍 DETRAN</a>
+      </a>
+
+      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Abrir Menu">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-item ${activePage === 'home' ? 'active' : ''}">Início</a>
+        <a href="index.html#proposta" class="nav-item">O Projeto</a>
+        <a href="curso.html" class="nav-item ${activePage === 'curso' ? 'active' : ''}">Curso Online</a>
+        <a href="consulta.html" class="nav-item ${activePage === 'consulta' ? 'active' : ''}">🔍 Consultar Veículo</a>
+        <a href="palestras.html" class="nav-item ${activePage === 'palestras' ? 'active' : ''}">Palestras & Parcerias</a>
+        
+        ${currentUser ? `
+          <a href="meu-ss.html" class="nav-item nav-cta ${activePage === 'meu-ss' ? 'active' : ''}">
+            👤 Meu SS (${currentUser.nome.split(' ')[0]})
+          </a>
+        ` : `
+          <a href="cadastro.html" class="nav-item nav-cta ${activePage === 'cadastro' ? 'active' : ''}">
+            🚀 Cadastrar-se
+          </a>
+          <a href="meu-ss.html" class="nav-item ${activePage === 'meu-ss' ? 'active' : ''}">
+            Entrar
+          </a>
+        `}
+
+        <a href="agentes.html" class="nav-item nav-agent ${activePage === 'agentes' ? 'active' : ''}">
+          ${currentAgent ? `🚔 Painel ${currentAgent.orgao}` : '🔒 Agentes'}
+        </a>
       </nav>
     </div>
   `;
-}
 
-// ── Footer ────────────────────────────────────────────────────────────────────
+  // Toggle do menu mobile
+  const toggle = document.getElementById('mobileNavToggle');
+  const links = document.getElementById('navLinks');
+  if (toggle && links) {
+    toggle.addEventListener('click', () => {
+      links.classList.toggle('mobile-open');
+    });
+  }
+}
 
 export function renderFooter() {
   const el = document.getElementById('site-footer');
   if (!el) return;
+
   el.innerHTML = `
-    <p>
-      <strong>VE Consciente Campo Mourão</strong> — 
-      Iniciativa da Prefeitura Municipal em parceria com o DETRAN-PR<br>
-      <span style="font-size:0.75rem; opacity:0.6;">
-        Este é um programa educativo sem fins lucrativos. 
-        Conduzir com segurança é um dever de todos.
-      </span>
-    </p>
+    <div class="footer-container">
+      <div class="footer-col">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <div class="brand-emblem" style="width:36px; height:36px; font-size:1.1rem;">SS</div>
+          <div style="font-family:var(--font-display); font-weight:800; font-size:1.1rem; color:#fff;">
+            Sustentabilidade & Segurança
+          </div>
+        </div>
+        <p style="line-height:1.6; margin-bottom:16px;">
+          Plataforma de conscientização, educação de trânsito e identificação segura para motociclistas,
+          veículos elétricos e autopropelidos.
+        </p>
+        <div style="display:flex; gap:12px; font-size:1.2rem;">
+          <span>🌱</span><span>🛡️</span><span>⚡</span><span>🛵</span><span>🔒</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5>Navegação</h5>
+        <ul>
+          <li><a href="index.html">Página Inicial</a></li>
+          <li><a href="cadastro.html">Cadastrar Veículo</a></li>
+          <li><a href="curso.html">Curso Online & Módulos</a></li>
+          <li><a href="meu-ss.html">Área do Usuário (Meu SS)</a></li>
+          <li><a href="consulta.html">Consulta Pública de QR Code</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Institucional</h5>
+        <ul>
+          <li><a href="palestras.html">Palestras Presenciais</a></li>
+          <li><a href="palestras.html#parcerias">Parcerias com Municípios</a></li>
+          <li><a href="agentes.html">Área para Agentes Autorizados</a></li>
+          <li><a href="palestras.html#publicidade">Espaço para Apoiadores</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Privacidade & Segurança</h5>
+        <p style="font-size:0.84rem; line-height:1.5; margin-bottom:12px;">
+          <strong>Conforme a LGPD (Lei nº 13.709/2018):</strong> O QR Code afixado no veículo NÃO expõe dados pessoais. 
+          Identificação protegida com acesso restrito a autoridades validadas.
+        </p>
+        <span style="display:inline-block; background:rgba(255,255,255,0.1); padding:4px 10px; border-radius:6px; font-size:0.75rem;">
+          🔒 Dados Criptografados
+        </span>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© ${new Date().getFullYear()} SS — Sustentabilidade & Segurança. Todos os direitos reservados.</div>
+      <div style="display:flex; gap:16px;">
+        <span>Educação Previne Acidentes</span>
+        <span>•</span>
+        <span>Tecnologia Gera Segurança</span>
+      </div>
+    </div>
   `;
 }

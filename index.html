@@ -3,182 +3,429 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VE Consciente — Campo Mourão</title>
+  <title>SS — Sustentabilidade & Segurança | Plataforma Educacional e de Identificação</title>
+  <meta name="description" content="Plataforma digital para motociclistas e usuários de veículos elétricos e autopropelidos. Educação, certificação e identificação inteligente com QR Code protegido." />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛴</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23047857'/><text x='50%' y='68%' font-family='sans-serif' font-weight='900' font-size='50' fill='white' text-anchor='middle'>SS</text></svg>" />
 </head>
 <body>
 
 <header class="site-header" id="site-header"></header>
 
-<main class="main-content wide-content" style="max-width:1000px;">
+<main class="main-wrapper wide">
 
-  <!-- HERO -->
-  <div class="hero">
-    <h2>Conduza com Consciência.<br>Ande com Segurança.</h2>
-    <p>
-      Programa oficial da Prefeitura de Campo Mourão e DETRAN-PR para 
-      conscientização dos condutores de veículos elétricos. Complete o 
-      programa e receba seu <strong>Certificado Digital com QR Code</strong>.
+  <!-- HERO PRINCIPAL -->
+  <section class="hero-banner">
+    <div class="hero-badge">
+      <span>🛡️ Sustentabilidade & Segurança no Trânsito</span>
+    </div>
+    <h1 class="hero-title">
+      Educação, Conscientização e Identificação Inteligente de Veículos de Duas Rodas
+    </h1>
+    <p class="hero-description">
+      Uma solução integrada para <strong>motociclistas e usuários de veículos elétricos e autopropelidos</strong>.
+      Aprenda a circular com segurança, obtenha sua certificação e proteja seu veículo com a identificação digital por <strong>QR Code (sem expor seus dados pessoais)</strong>.
     </p>
-    <a href="cadastro.html" class="btn btn-lg" style="background:#fff; color:var(--primary);">
-      🚀 Iniciar Conscientização
-    </a>
-  </div>
+    <div class="hero-actions">
+      <a href="cadastro.html" class="btn btn-light btn-lg">
+        🚀 Cadastrar e Iniciar Curso
+      </a>
+      <a href="consulta.html" class="btn btn-outline-white btn-lg">
+        🔍 Consultar QR Code de Veículo
+      </a>
+      <a href="meu-ss.html" class="btn btn-outline-white">
+        👤 Acessar Meu SS
+      </a>
+    </div>
+  </section>
 
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-badge">
-      <div class="stat-number" id="stat-total">0</div>
-      <div class="stat-label">Condutores Conscientizados</div>
-    </div>
-    <div class="stat-badge">
-      <div class="stat-number" id="stat-hoje">0</div>
-      <div class="stat-label">Certificados Hoje</div>
-    </div>
-    <div class="stat-badge">
-      <div class="stat-number">4</div>
-      <div class="stat-label">Etapas do Programa</div>
-    </div>
-    <div class="stat-badge">
-      <div class="stat-number">1 ano</div>
-      <div class="stat-label">Validade do Certificado</div>
-    </div>
-  </div>
-
-  <!-- COMO FUNCIONA -->
-  <div class="card mb-24">
-    <div class="card-title">📋 Como Funciona o Programa?</div>
-    <div class="card-subtitle">São apenas 4 etapas simples e obrigatórias para obter seu certificado.</div>
-
-    <div class="infraction-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-      <div style="text-align:center; padding:24px 16px; background:var(--bg); border-radius:var(--radius); border:2px solid var(--border);">
-        <div style="font-size:2.5rem; margin-bottom:10px;">📝</div>
-        <div style="font-weight:700; color:var(--primary); margin-bottom:6px;">Etapa 1 — Cadastro</div>
-        <div style="font-size:0.83rem; color:var(--text-secondary);">Informe seus dados pessoais e o modelo do seu veículo elétrico.</div>
-      </div>
-      <div style="text-align:center; padding:24px 16px; background:var(--bg); border-radius:var(--radius); border:2px solid var(--border);">
-        <div style="font-size:2.5rem; margin-bottom:10px;">🛴</div>
-        <div style="font-weight:700; color:var(--primary); margin-bottom:6px;">Etapa 2 — Tutorial</div>
-        <div style="font-size:0.83rem; color:var(--text-secondary);">Aprenda a operar corretamente seu veículo elétrico com segurança.</div>
-      </div>
-      <div style="text-align:center; padding:24px 16px; background:var(--bg); border-radius:var(--radius); border:2px solid var(--border);">
-        <div style="font-size:2.5rem; margin-bottom:10px;">🚦</div>
-        <div style="font-weight:700; color:var(--primary); margin-bottom:6px;">Etapa 3 — Regras</div>
-        <div style="font-size:0.83rem; color:var(--text-secondary);">Conheça as regras de trânsito e faça o quiz de fixação.</div>
-      </div>
-      <div style="text-align:center; padding:24px 16px; background:var(--bg); border-radius:var(--radius); border:2px solid var(--border);">
-        <div style="font-size:2.5rem; margin-bottom:10px;">🎓</div>
-        <div style="font-weight:700; color:var(--primary); margin-bottom:6px;">Etapa 4 — Certificado</div>
-        <div style="font-size:0.83rem; color:var(--text-secondary);">Receba seu QR Code oficial para apresentar ao DETRAN quando solicitado.</div>
+  <!-- ESTATÍSTICAS DA PLATAFORMA -->
+  <section class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon green">🎓</div>
+      <div>
+        <div class="stat-value" id="stat-certificados">0</div>
+        <div class="stat-label">Condutores Certificados</div>
       </div>
     </div>
-  </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">🛵</div>
+      <div>
+        <div class="stat-value" id="stat-veiculos">0</div>
+        <div class="stat-label">Veículos Cadastrados no SS</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon amber">⚡</div>
+      <div>
+        <div class="stat-value" id="stat-eletricos">0</div>
+        <div class="stat-label">Patinetes e E-Bikes Ativas</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">🚨</div>
+      <div>
+        <div class="stat-value" id="stat-alertas">0</div>
+        <div class="stat-label">Alertas Ativos de Roubo/Furto</div>
+      </div>
+    </div>
+  </section>
 
-  <!-- BENEFÍCIOS -->
-  <div class="card mb-24">
-    <div class="card-title">🎁 Benefícios do Certificado</div>
-    <div class="card-subtitle">Condutores com QR Code válido têm vantagens exclusivas em Campo Mourão.</div>
+  <!-- O PROBLEMA QUE ENFRENTAMOS -->
+  <section class="card mb-24" id="problema">
+    <div class="card-title">⚠️ O Problema que Estamos Enfrentando nas Ruas</div>
+    <div class="card-subtitle">
+      O crescimento rápido de veículos elétricos e motocicletas gerou desafios graves de convivência e segurança viária:
+    </div>
 
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
-      <div class="info-box green">
-        <span style="font-size:1.5rem;">⚡</span>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+      <div class="alert-box red" style="margin:0;">
+        <span class="alert-icon">🚦</span>
         <div>
-          <strong>Prioridade no DETRAN</strong><br>
-          <span>Atendimento preferencial em serviços relacionados ao seu veículo elétrico.</span>
+          <strong>Avanço de Sinal Vermelho e Desrespeito a Placas</strong><br>
+          <span style="font-size:0.86rem;">Condutores atravessando cruzamentos às cegas, colocando a própria vida e a de pedestres em risco.</span>
         </div>
       </div>
-      <div class="info-box blue">
-        <span style="font-size:1.5rem;">🏪</span>
+      <div class="alert-box red" style="margin:0;">
+        <span class="alert-icon">↩️</span>
         <div>
-          <strong>Descontos em Parceiros</strong><br>
-          <span>Benefícios em lojas de manutenção, capacetes e acessórios na cidade.</span>
+          <strong>Circulação na Contramão e em Calçadas</strong><br>
+          <span style="font-size:0.86rem;">Patinetes e motos trafegando em alta velocidade onde pedestres, idosos e crianças circulam.</span>
         </div>
       </div>
-      <div class="info-box green">
-        <span style="font-size:1.5rem;">📋</span>
+      <div class="alert-box red" style="margin:0;">
+        <span class="alert-icon">🪖</span>
         <div>
-          <strong>Reconhecimento Oficial</strong><br>
-          <span>Documento válido que comprova que você condutor foi conscientizado.</span>
+          <strong>Falta de Capacete e Equipamentos de Proteção</strong><br>
+          <span style="font-size:0.86rem;">Ausência de itens básicos que salvam vidas em quedas e colisões simples.</span>
         </div>
       </div>
-      <div class="info-box blue">
-        <span style="font-size:1.5rem;">🔋</span>
+      <div class="alert-box red" style="margin:0;">
+        <span class="alert-icon">⚡</span>
         <div>
-          <strong>Pontos de Recarga</strong><br>
-          <span>Acesso preferencial à rede de pontos de recarga municipais (em implantação).</span>
+          <strong>Desconhecimento das Regras de Veículos Elétricos</strong><br>
+          <span style="font-size:0.86rem;">Falta de clareza sobre limites de velocidade (32 km/h), potências e onde cada veículo pode rodar.</span>
+        </div>
+      </div>
+      <div class="alert-box red" style="margin:0;">
+        <span class="alert-icon">🔍</span>
+        <div>
+          <strong>Dificuldade de Identificação do Veículo</strong><br>
+          <span style="font-size:0.86rem;">Em casos de acidentes, perda, roubo ou furto, muitos veículos não possuem placa nem registro acessível.</span>
+        </div>
+      </div>
+      <div class="alert-box green" style="margin:0;">
+        <span class="alert-icon">💡</span>
+        <div>
+          <strong>A Ideia Central do Projeto SS</strong><br>
+          <span style="font-size:0.86rem;">A <em>educação</em> previne comportamentos de risco, enquanto a <em>tecnologia</em> auxilia na identificação, proteção e segurança coletiva.</span>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- POR QUÊ ISSO É NECESSÁRIO -->
-  <div class="card mb-24">
-    <div class="card-title">⚠️ Por Que Este Programa Existe?</div>
-    <div class="card-subtitle">Campo Mourão registra crescimento acelerado de veículos elétricos nas ruas.</div>
+  <!-- FLUXO GERAL DA PLATAFORMA -->
+  <section class="card mb-24" id="proposta">
+    <div class="card-title">🔄 Como Funciona a Plataforma SS</div>
+    <div class="card-subtitle">
+      Do cadastro à proteção contínua: um caminho fluido, acessível e sem custos para o cidadão.
+    </div>
 
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
-      <div class="info-box red">
-        <span>🚨</span>
-        <span>Condutores avançando semáforos vermelhos</span>
+    <div class="flow-steps-container">
+      <div class="flow-step-box active">
+        <div class="flow-step-num">1</div>
+        <div class="flow-step-icon">👤</div>
+        <div class="flow-step-title">Cadastro Pessoal</div>
+        <div class="flow-step-desc">Seus dados protegidos (com suporte a responsável legal para menores).</div>
       </div>
-      <div class="info-box red">
-        <span>⛑️</span>
-        <span>Circulação sem capacete de proteção</span>
+      <div class="flow-step-box active">
+        <div class="flow-step-num">2</div>
+        <div class="flow-step-icon">🛴</div>
+        <div class="flow-step-title">Cadastro do Veículo</div>
+        <div class="flow-step-desc">Vincule sua moto, patinete ou bike e gere seu ID único SS.</div>
       </div>
-      <div class="info-box red">
-        <span>↩️</span>
-        <span>Tráfego em sentido contrário (contramão)</span>
+      <div class="flow-step-box active">
+        <div class="flow-step-num">3</div>
+        <div class="flow-step-icon">📚</div>
+        <div class="flow-step-title">Curso Online</div>
+        <div class="flow-step-desc">Módulos visuais e diretos sobre sinalização, pilotagem e regras.</div>
       </div>
-      <div class="info-box red">
-        <span>📱</span>
-        <span>Uso do celular durante a condução</span>
+      <div class="flow-step-box active">
+        <div class="flow-step-num">4</div>
+        <div class="flow-step-icon">🧠</div>
+        <div class="flow-step-title">Avaliação Prática</div>
+        <div class="flow-step-desc">Situações reais do dia a dia para fixar o aprendizado com segurança.</div>
       </div>
-      <div class="info-box red">
-        <span>👥</span>
-        <span>Transporte de passageiros não permitidos</span>
+      <div class="flow-step-box active">
+        <div class="flow-step-num">5</div>
+        <div class="flow-step-icon">🎓</div>
+        <div class="flow-step-title">Certificação SS</div>
+        <div class="flow-step-desc">Comprovação oficial de conclusão do programa educacional.</div>
       </div>
-      <div class="info-box red">
-        <span>⚡</span>
-        <span>Veículos com velocidade desbloqueada (>32 km/h)</span>
+      <div class="flow-step-box active">
+        <div class="flow-step-num">6</div>
+        <div class="flow-step-icon">🔳</div>
+        <div class="flow-step-title">QR Code Protegido</div>
+        <div class="flow-step-desc">Adesivo para o veículo com consulta pública e alerta de roubo.</div>
       </div>
     </div>
 
-    <div class="info-box yellow mt-16">
-      <span style="font-size:1.3rem;">📌</span>
-      <span><strong>Importante:</strong> O CTB (Código de Trânsito Brasileiro) regulamenta o uso de veículos elétricos de micromobilidade. Infrações geram multas, apreensão do veículo e podem resultar em acidentes graves.</span>
+    <div class="text-center mt-24">
+      <a href="cadastro.html" class="btn btn-primary btn-lg">
+        Iniciar Meu Processo Agora →
+      </a>
     </div>
-  </div>
+  </section>
 
-  <div class="text-center">
+  <!-- O DIFERENCIAL DO QR CODE E PRIVACIDADE LGPD -->
+  <section class="card mb-24">
+    <div class="card-title">🔳 O QR Code Inteligente: Identificação Sem Expor Seus Dados</div>
+    <div class="card-subtitle">
+      Entenda como funciona a tecnologia do SS, desenhada rigorosamente nos princípios da LGPD.
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; align-items:center;">
+      <div>
+        <div class="alert-box amber">
+          <span class="alert-icon">❌</span>
+          <div>
+            <strong>O que o QR Code NÃO contém:</strong><br>
+            <span>NÃO contém seu CPF, NÃO contém seu endereço, telefone, nem dados sensíveis. O QR Code não transforma seu veículo em uma etiqueta pública com sua vida pessoal.</span>
+          </div>
+        </div>
+
+        <div class="alert-box green">
+          <span class="alert-icon">✅</span>
+          <div>
+            <strong>O que o QR Code contém:</strong><br>
+            <span>Apenas um <strong>identificador seguro (ex: SS-A7F29K)</strong> que aponta para o sistema central.</span>
+          </div>
+        </div>
+
+        <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px;">
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:8px;">
+            👁️ O que uma pessoa comum vê ao escanear na rua?
+          </h4>
+          <p style="font-size:0.86rem; color:var(--text-secondary); line-height:1.5;">
+            Ela verá apenas: <em>"SS — Veículo cadastrado ✓ | ID: SS-48291 | Tipo: Patinete elétrico | Status: Ativo | 🔒 Dados do proprietário protegidos."</em>
+          </p>
+        </div>
+      </div>
+
+      <!-- SIMULADOR VISUAL DO ADESIVO -->
+      <div class="sticker-preview-wrapper" style="margin:0;">
+        <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">
+          Prévia do Adesivo Físico no Veículo
+        </span>
+        <div class="physical-sticker">
+          <div class="sticker-header">
+            <div>
+              <div class="sticker-brand-text">SS — SUSTENTABILIDADE</div>
+              <div class="sticker-sub">& SEGURANÇA VIÁRIA</div>
+            </div>
+            <div style="font-size:1.4rem;">🌱🛡️</div>
+          </div>
+          <div class="sticker-body">
+            <div class="sticker-qr-slot">
+              <!-- QR Code demonstrativo estático SVG -->
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <rect width="100" height="100" fill="#fff"/>
+                <rect x="10" y="10" width="25" height="25" fill="#047857"/>
+                <rect x="15" y="15" width="15" height="15" fill="#fff"/>
+                <rect x="18" y="18" width="9" height="9" fill="#047857"/>
+                
+                <rect x="65" y="10" width="25" height="25" fill="#047857"/>
+                <rect x="70" y="15" width="15" height="15" fill="#fff"/>
+                <rect x="73" y="18" width="9" height="9" fill="#047857"/>
+                
+                <rect x="10" y="65" width="25" height="25" fill="#047857"/>
+                <rect x="15" y="70" width="15" height="15" fill="#fff"/>
+                <rect x="18" y="73" width="9" height="9" fill="#047857"/>
+
+                <rect x="42" y="15" width="10" height="10" fill="#1E40AF"/>
+                <rect x="42" y="35" width="16" height="8" fill="#047857"/>
+                <rect x="65" y="45" width="20" height="10" fill="#1E40AF"/>
+                <rect x="45" y="65" width="12" height="15" fill="#047857"/>
+                <rect x="65" y="75" width="15" height="12" fill="#1E40AF"/>
+              </svg>
+            </div>
+            <div class="sticker-details">
+              <div class="sticker-id-code">ID: SS-48291</div>
+              <div class="sticker-vehicle-name">Patinete Elétrico Xiaomi</div>
+              <div class="sticker-badge-secure">✓ VEÍCULO CADASTRADO</div>
+              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:4px;">
+                Escaneie para consultar regularidade
+              </div>
+            </div>
+          </div>
+          <div class="sticker-footer">
+            🔒 Identificação Protegida nos termos da LGPD
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- O RECURSO DE ALERTA DE ROUBO/FURTO -->
+  <section class="card mb-24" style="border-left: 6px solid var(--danger);">
+    <div class="card-title" style="color:var(--danger);">
+      🚨 Sistema de Alerta para Veículo Roubado ou Furtado
+    </div>
+    <div class="card-subtitle">
+      Se o veículo for subtraído, o proprietário ativa o alerta no Meu SS em 1 clique.
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+      <div>
+        <p style="font-size:0.95rem; color:var(--text-secondary); line-height:1.6; margin-bottom:14px;">
+          Se alguém encontrar o veículo abandonado, tentar comprá-lo ou a polícia abordá-lo, ao escanear o QR Code a tela exibirá imediatamente:
+        </p>
+        <div class="alert-box red" style="margin:0;">
+          <span class="alert-icon">⚠️</span>
+          <div>
+            <strong>ALERTA DE ROUBO / FURTO ATIVO!</strong><br>
+            <span>"Este veículo possui um alerta cadastrado pelo proprietário. Não tente recuperá-lo por conta própria. Acione as autoridades (190 / Guarda Municipal)."</span>
+          </div>
+        </div>
+        <p style="font-size:0.86rem; color:var(--text-muted); margin-top:12px;">
+          Assim que recuperado, o proprietário clica em <strong>"Declarar Recuperado"</strong> e o veículo volta ao status de cadastro ativo regular!
+        </p>
+      </div>
+
+      <div style="background:#FEF2F2; border:2px dashed #F87171; border-radius:var(--radius-md); padding:20px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+        <div style="font-size:2.8rem; margin-bottom:10px;">🚨</div>
+        <h4 style="color:#991B1B; font-size:1.1rem; font-weight:800; margin-bottom:6px;">
+          Teste a Consulta de um Veículo com Alerta
+        </h4>
+        <p style="font-size:0.85rem; color:#7F1D1D; margin-bottom:16px;">
+          No nosso sistema de testes, o veículo <strong>SS-A7F29K</strong> está com alerta ativo de furto.
+        </p>
+        <a href="consulta.html?id=SS-A7F29K" class="btn btn-danger btn-sm">
+          👁️ Ver Tela Pública de Veículo Roubado
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÍVEIS DE ACESSO & ÁREA DE AGENTES -->
+  <section class="card mb-24">
+    <div class="card-title">🔐 Níveis de Acesso e Responsabilidade</div>
+    <div class="card-subtitle">
+      Acesso transparente e segmentado: cada perfil vê apenas o que a lei permite.
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+        <thead>
+          <tr style="background:#F1F5F9; border-bottom:2px solid var(--border);">
+            <th style="padding:12px 16px;">Perfil</th>
+            <th style="padding:12px 16px;">O que pode acessar?</th>
+            <th style="padding:12px 16px;">Dados Pessoais Visíveis?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:12px 16px; font-weight:700;">🌐 Visitante</td>
+            <td style="padding:12px 16px;">Conteúdo público, cursos, palestras e propostas de parcerias</td>
+            <td style="padding:12px 16px; color:var(--danger); font-weight:600;">❌ Não</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:12px 16px; font-weight:700;">📷 Leitor do QR Code (Cidadão)</td>
+            <td style="padding:12px 16px;">Modelo, cor, tipo do veículo e se há alerta de roubo/furto</td>
+            <td style="padding:12px 16px; color:var(--danger); font-weight:600;">❌ 100% Protegido (LGPD)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:12px 16px; font-weight:700;">👤 Usuário Cadastrado</td>
+            <td style="padding:12px 16px;">Sua área privada (Meu SS), edição de dados, gerar QR Code, ativar alertas</td>
+            <td style="padding:12px 16px; color:var(--success); font-weight:600;">✓ Apenas os seus próprios</td>
+          </tr>
+          <tr style="background:#EFF6FF;">
+            <td style="padding:12px 16px; font-weight:700; color:var(--secondary);">🚔 Agente Autorizado (DETRAN/Polícia/GM)</td>
+            <td style="padding:12px 16px;">Consulta institucional com matrícula, verificação de dados para fiscalização e auxílio em acidentes</td>
+            <td style="padding:12px 16px; color:var(--secondary); font-weight:700;">✓ Dados necessários à função</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert-box blue mt-16" style="margin-bottom:0;">
+      <span class="alert-icon">ℹ️</span>
+      <div>
+        <strong>Importante: O SS não aplica multas.</strong><br>
+        <span>O sistema atua como uma ferramenta moderna de educação, prevenção e apoio à identificação. A fiscalização e sanções permanecem sob competência exclusiva dos órgãos oficiais segundo o Código de Trânsito Brasileiro (CTB).</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALESTRAS PRESENCIAIS, PARCERIAS E PUBLICIDADE -->
+  <section class="card mb-24" style="background:linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);">
+    <div class="card-title">🤝 Palestras Presenciais, Parcerias & Apoiadores</div>
+    <div class="card-subtitle">
+      O SS vai além do ambiente digital com ações práticas na comunidade e apoio institucional.
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:18px;">
+      <div style="background:#fff; border-radius:var(--radius-sm); padding:20px; border:1px solid var(--border);">
+        <div style="font-size:2rem; margin-bottom:8px;">🎤</div>
+        <h4 style="font-size:1.05rem; font-weight:700; margin-bottom:6px;">Palestras nas Cidades</h4>
+        <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.5;">
+          Workshops e demonstrações práticas em escolas, praças, empresas e pontos de encontro de motociclistas.
+        </p>
+      </div>
+
+      <div style="background:#fff; border-radius:var(--radius-sm); padding:20px; border:1px solid var(--border);">
+        <div style="font-size:2rem; margin-bottom:8px;">🏛️</div>
+        <h4 style="font-size:1.05rem; font-weight:700; margin-bottom:6px;">Parcerias Institucionais</h4>
+        <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.5;">
+          Integração com prefeituras, secretarias de trânsito, DETRAN, guardas municipais e batalhões de trânsito.
+        </p>
+      </div>
+
+      <div style="background:#fff; border-radius:var(--radius-sm); padding:20px; border:1px solid var(--border);">
+        <div style="font-size:2rem; margin-bottom:8px;">🏪</div>
+        <h4 style="font-size:1.05rem; font-weight:700; margin-bottom:6px;">Espaço para Apoiadores</h4>
+        <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.5;">
+          Lojas de motos, revendas de veículos elétricos, seguradoras e oficinas parceiras que incentivam a direção segura.
+        </p>
+      </div>
+    </div>
+
+    <div class="text-center mt-24">
+      <a href="palestras.html" class="btn btn-secondary">
+        Conhecer Proposta de Parcerias e Palestras →
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section style="text-align:center; padding:30px 20px;">
+    <h2 style="font-family:var(--font-display); font-size:1.9rem; font-weight:800; color:var(--text); margin-bottom:10px;">
+      Pronto para fazer parte de um trânsito mais consciente?
+    </h2>
+    <p style="font-size:1rem; color:var(--text-secondary); max-width:600px; margin:0 auto 24px;">
+      Leva menos de 10 minutos para se cadastrar, concluir o curso, obter seu certificado e gerar o QR Code do seu veículo.
+    </p>
     <a href="cadastro.html" class="btn btn-primary btn-lg">
-      🛴 Começar Minha Conscientização Agora
+      Cadastre-se Gratuitamente no SS →
     </a>
-    <p class="text-muted mt-8" style="font-size:0.82rem;">Gratuito • Rápido • 100% Online</p>
-  </div>
+  </section>
 
 </main>
 
 <footer class="site-footer" id="site-footer"></footer>
 
 <script type="module">
-  import { renderHeader, renderFooter, countCondutores } from './assets/js/app.js';
-  renderHeader();
+  import { renderHeader, renderFooter, getDB } from './assets/js/app.js';
+
+  renderHeader('home');
   renderFooter();
 
-  // Contadores
-  const total = countCondutores();
-  document.getElementById('stat-total').textContent = total;
-
-  // Hoje: condutores com data de hoje
-  const hoje = new Date().toLocaleDateString('pt-BR');
-  const { getDB } = await import('./assets/js/app.js');
+  // Atualiza contadores
   const db = getDB();
-  const hoje_count = Object.values(db.condutores).filter(c => {
-    const d = new Date(c.dataConclusao);
-    return d.toLocaleDateString('pt-BR') === hoje;
-  }).length;
-  document.getElementById('stat-hoje').textContent = hoje_count;
+  document.getElementById('stat-certificados').textContent = db.certificados.length;
+  document.getElementById('stat-veiculos').textContent = db.veiculos.length;
+  document.getElementById('stat-eletricos').textContent = db.veiculos.filter(v => v.tipo === 'patinete' || v.tipo === 'bike').length;
+  document.getElementById('stat-alertas').textContent = db.veiculos.filter(v => v.status === 'ROUBADO_FURTADO').length;
 </script>
 </body>
 </html>

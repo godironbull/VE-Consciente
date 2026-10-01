@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curso Online SS — Educação para Segurança no Trânsito</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23047857'/><text x='50%' y='68%' font-family='sans-serif' font-weight='900' font-size='50' fill='white' text-anchor='middle'>SS</text></svg>" />
+</head>
+<body>
+
+<header class="site-header" id="site-header"></header>
+
+<main class="main-wrapper narrow">
+
+  <div style="text-align:center; margin-bottom:28px;">
+    <div class="hero-badge" style="background:#DCFCE7; color:var(--primary-dark); border:1px solid #86EFAC;">
+      Etapa 3 de 5 • Programa Educacional SS
+    </div>
+    <h1 style="font-family:var(--font-display); font-size:2.1rem; font-weight:800; color:var(--text); margin-bottom:8px;">
+      Curso Online: Condução Consciente e Segura
+    </h1>
+    <p style="color:var(--text-secondary); font-size:1rem; max-width:640px; margin:0 auto;">
+      Conteúdo simples, direto e visual. Clique em cada módulo para estudar e marque <strong>"Concluir Módulo"</strong> ao final de cada um.
+    </p>
+  </div>
+
+  <!-- BARRA DE PROGRESSO DO CURSO -->
+  <div class="card mb-24" style="padding:18px 24px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <span style="font-weight:700; font-size:0.95rem; color:var(--text);">Progresso no Curso:</span>
+      <span style="font-weight:800; color:var(--primary); font-size:1rem;" id="progressLabel">0 de 6 módulos</span>
+    </div>
+    <div style="background:#E2E8F0; height:10px; border-radius:99px; overflow:hidden;">
+      <div id="progressBar" style="background:var(--primary); height:100%; width:0%; transition:width 0.4s ease;"></div>
+    </div>
+  </div>
+
+  <!-- MÓDULOS DO CURSO -->
+  <div id="modulesContainer">
+
+    <!-- MÓDULO 1: SINALIZAÇÃO -->
+    <div class="course-module-card" id="card-mod-1">
+      <div class="module-header" onclick="toggleModule(1)">
+        <div class="module-title-group">
+          <div class="module-badge-icon">🚦</div>
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text);">Módulo 1: Sinalização de Trânsito</h3>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Semáforos, placas e sinalização de solo</span>
+          </div>
+        </div>
+        <div id="status-mod-1" style="font-weight:700; color:var(--text-muted);">Pendente ⏳</div>
+      </div>
+      <div class="module-body open" id="body-mod-1">
+        <div style="font-size:0.95rem; color:var(--text); line-height:1.6;">
+          <p style="margin-bottom:12px;">
+            A sinalização existe para coordenar fluxos e evitar colisões. Para veículos de duas rodas, respeitar a sinalização é a diferença entre a vida e acidentes fatais.
+          </p>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin:14px 0;">
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+              <strong style="color:var(--danger);">🔴 Semáforo Vermelho</strong>
+              <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:4px;">
+                <strong>Parada obrigatória.</strong> Nunca "avance de fininho" ou aproveite a brecha. Mais de 40% das colisões graves em esquinas acontecem por avanço de sinal.
+              </p>
+            </div>
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+              <strong style="color:var(--accent);">🟡 Semáforo Amarelo</strong>
+              <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:4px;">
+                <strong>Atenção e parada.</strong> Significa desaceleração imediata para parar em segurança, exceto se a parada for causar colisão traseira.
+              </p>
+            </div>
+          </div>
+
+          <div class="alert-box green">
+            <span class="alert-icon">🚸</span>
+            <div>
+              <strong>Faixas de Pedestres e Pintura no Solo:</strong><br>
+              Pedestres têm prioridade absoluta. Reduza a velocidade ao se aproximar de faixas, lombadas e cruzamentos sem sinalização.
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm mt-16" onclick="completeModule(1)">
+          ✓ Concluir Módulo 1 e Avançar
+        </button>
+      </div>
+    </div>
+
+    <!-- MÓDULO 2: CONDUÇÃO SEGURA -->
+    <div class="course-module-card" id="card-mod-2">
+      <div class="module-header" onclick="toggleModule(2)">
+        <div class="module-title-group">
+          <div class="module-badge-icon">🛵</div>
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text);">Módulo 2: Condução Segura e Defensiva</h3>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Distância, antecipação e pontos cegos</span>
+          </div>
+        </div>
+        <div id="status-mod-2" style="font-weight:700; color:var(--text-muted);">Pendente ⏳</div>
+      </div>
+      <div class="module-body" id="body-mod-2">
+        <div style="font-size:0.95rem; color:var(--text); line-height:1.6;">
+          <p style="margin-bottom:12px;">
+            A condução defensiva é a arte de prever ações imprudentes de outros motoristas e das condições da via antes que se transformem em acidentes.
+          </p>
+
+          <ul style="padding-left:20px; margin-bottom:14px; font-size:0.9rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:8px;">
+            <li><strong>Distância de Seguimento:</strong> Mantenha pelo menos 2 a 3 segundos de distância do veículo à frente. Em pista molhada, dobre essa distância.</li>
+            <li><strong>Pontos Cegos:</strong> Carros e caminhões têm pontos onde o motorista NÃO enxerga você no espelho retrovisor. Se você não vê o rosto do motorista no retrovisor dele, ele também não vê você.</li>
+            <li><strong>Posicionamento na Faixa:</strong> Ocupe o centro ou o terço da faixa com firmeza. Não ziguezagueie entre faixas sem sinalizar.</li>
+            <li><strong>Uso dos Freios:</strong> Acione os dois freios de forma combinada e suave. No patinete, frear só na frente causa capotamento; frear só atrás faz derrapar.</li>
+          </ul>
+
+          <div class="alert-box blue">
+            <span class="alert-icon">👀</span>
+            <div>
+              <strong>Atenção Máxima:</strong> Nunca use celular enquanto pilota. Fones de ouvido nos dois ouvidos tiram sua audição dos ruídos de buzinas e freadas.
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm mt-16" onclick="completeModule(2)">
+          ✓ Concluir Módulo 2 e Avançar
+        </button>
+      </div>
+    </div>
+
+    <!-- MÓDULO 3: EQUIPAMENTOS DE SEGURANÇA -->
+    <div class="course-module-card" id="card-mod-3">
+      <div class="module-header" onclick="toggleModule(3)">
+        <div class="module-title-group">
+          <div class="module-badge-icon">🪖</div>
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text);">Módulo 3: Equipamentos de Segurança</h3>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Capacete certificado e itens que salvam vidas</span>
+          </div>
+        </div>
+        <div id="status-mod-3" style="font-weight:700; color:var(--text-muted);">Pendente ⏳</div>
+      </div>
+      <div class="module-body" id="body-mod-3">
+        <div style="font-size:0.95rem; color:var(--text); line-height:1.6;">
+          <p style="margin-bottom:12px;">
+            Em veículos de duas rodas, o corpo do condutor é o parachoque. Estar equipado é a única barreira entre uma lesão leve e um traumatismo irreversível.
+          </p>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:14px;">
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px;">
+              <strong>⛑️ Capacete com Selo INMETRO</strong>
+              <p style="font-size:0.82rem; color:var(--text-secondary); margin-top:4px;">
+                Tamanho correto e com jugular afivelada. Capacete frouxo sai da cabeça antes do impacto no chão.
+              </p>
+            </div>
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px;">
+              <strong>👓 Viseira ou Óculos Protetores</strong>
+              <p style="font-size:0.82rem; color:var(--text-secondary); margin-top:4px;">
+                Protege contra insetos, poeira e pedras arremessadas por outros veículos.
+              </p>
+            </div>
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px;">
+              <strong>🧤 Luvas e Jaqueta Refletiva</strong>
+              <p style="font-size:0.82rem; color:var(--text-secondary); margin-top:4px;">
+                Em quedas, o instinto humano é colocar as mãos no chão. As luvas protegem a pele e a jaqueta garante visibilidade noturna.
+              </p>
+            </div>
+          </div>
+
+          <div class="alert-box red">
+            <span class="alert-icon">⚠️</span>
+            <div>
+              <strong>Calçados Adequados:</strong> Nunca pilote de chinelo, sandálias ou descalço. O pé precisa de apoio firme para estabilidade e frenagem.
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm mt-16" onclick="completeModule(3)">
+          ✓ Concluir Módulo 3 e Avançar
+        </button>
+      </div>
+    </div>
+
+    <!-- MÓDULO 4: SITUAÇÕES DE RISCO -->
+    <div class="course-module-card" id="card-mod-4">
+      <div class="module-header" onclick="toggleModule(4)">
+        <div class="module-title-group">
+          <div class="module-badge-icon">⚠️</div>
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text);">Módulo 4: Situações de Risco e Infrações</h3>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Contramão, calçadas e comportamentos perigosos</span>
+          </div>
+        </div>
+        <div id="status-mod-4" style="font-weight:700; color:var(--text-muted);">Pendente ⏳</div>
+      </div>
+      <div class="module-body" id="body-mod-4">
+        <div style="font-size:0.95rem; color:var(--text); line-height:1.6;">
+          <p style="margin-bottom:12px;">
+            Evite a todo custo estes 4 comportamentos de altíssimo risco observados com frequência nas cidades:
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            <div class="alert-box red" style="margin:0;">
+              <span class="alert-icon">🚫</span>
+              <div>
+                <strong>1. Trafegar na Contramão:</strong><br>
+                A velocidade do impacto frontal é a soma das velocidades dos dois veículos (ex: 30 km/h + 40 km/h = choque a 70 km/h!). Motoristas não esperam você vindo do sentido oposto.
+              </div>
+            </div>
+
+            <div class="alert-box red" style="margin:0;">
+              <span class="alert-icon">🚶</span>
+              <div>
+                <strong>2. Invadir Calçadas com Veículos Motorizados/Elétricos:</strong><br>
+                A calçada é refúgio de pedestres. Idosos, crianças e animais não têm reflexos para desviar de um patinete ou moto a 25 km/h. Se precisar passar pela calçada, desmonte e empurre a pé.
+              </div>
+            </div>
+
+            <div class="alert-box red" style="margin:0;">
+              <span class="alert-icon">👥</span>
+              <div>
+                <strong>3. Transportar Passageiros em Patinetes Elétricos:</strong><br>
+                Patinetes são projetados e testados para 1 único usuário. Dois passageiros alteram o centro de gravidade e anulam o freio.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm mt-16" onclick="completeModule(4)">
+          ✓ Concluir Módulo 4 e Avançar
+        </button>
+      </div>
+    </div>
+
+    <!-- MÓDULO 5: VEÍCULOS ELÉTRICOS & AUTOPROPELIDOS -->
+    <div class="course-module-card" id="card-mod-5">
+      <div class="module-header" onclick="toggleModule(5)">
+        <div class="module-title-group">
+          <div class="module-badge-icon">⚡</div>
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text);">Módulo 5: Veículos Elétricos e Autopropelidos</h3>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Regras da Resolução CONTRAN 996/2023</span>
+          </div>
+        </div>
+        <div id="status-mod-5" style="font-weight:700; color:var(--text-muted);">Pendente ⏳</div>
+      </div>
+      <div class="module-body" id="body-mod-5">
+        <div style="font-size:0.95rem; color:var(--text); line-height:1.6;">
+          <p style="margin-bottom:12px;">
+            A Resolução nº 996/2023 do CONTRAN definiu claramente as categorias de veículos de micromobilidade no Brasil:
+          </p>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:14px;">
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+              <strong style="color:var(--primary);">Patinetes e Autopropelidos</strong>
+              <p style="font-size:0.83rem; color:var(--text-secondary); margin-top:4px;">
+                Até 32 km/h em vias públicas. Devem conter velocímetro, campainha e luzes noturnas. Não requerem CNH, mas exigem capacete e respeito integral ao CTB.
+              </p>
+            </div>
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+              <strong style="color:var(--secondary);">Bicicletas Elétricas (Pedelec)</strong>
+              <p style="font-size:0.83rem; color:var(--text-secondary); margin-top:4px;">
+                Motor até 1000W que auxilia ao pedalar (sem acelerador manual puro que exceda 32 km/h). Podem usar ciclovias respeitando o limite local de 20 km/h.
+              </p>
+            </div>
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+              <strong style="color:var(--danger);">Ciclomotores (Moby / Scooters)</strong>
+              <p style="font-size:0.83rem; color:var(--text-secondary); margin-top:4px;">
+                Velocidade até 50 km/h. <strong>EXIGEM habilitação (ACC ou CNH A), registro, placa e capacete de motociclista.</strong> Não podem andar em ciclovias!
+              </p>
+            </div>
+          </div>
+
+          <div class="alert-box amber">
+            <span class="alert-icon">⚡</span>
+            <div>
+              <strong>Veículos "Desbloqueados":</strong> Modificar patinetes para ultrapassar 32 km/h os enquadra ilegalmente como ciclomotores não registrados, sujeitos à apreensão imediata pelas autoridades.
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm mt-16" onclick="completeModule(5)">
+          ✓ Concluir Módulo 5 e Avançar
+        </button>
+      </div>
+    </div>
+
+    <!-- MÓDULO 6: RESPONSABILIDADE COLETIVA -->
+    <div class="course-module-card" id="card-mod-6">
+      <div class="module-header" onclick="toggleModule(6)">
+        <div class="module-title-group">
+          <div class="module-badge-icon">🤝</div>
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text);">Módulo 6: Responsabilidade Coletiva e Empatia</h3>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">Prevenção de acidentes e convivência harmoniosa</span>
+          </div>
+        </div>
+        <div id="status-mod-6" style="font-weight:700; color:var(--text-muted);">Pendente ⏳</div>
+      </div>
+      <div class="module-body" id="body-mod-6">
+        <div style="font-size:0.95rem; color:var(--text); line-height:1.6;">
+          <p style="margin-bottom:12px;">
+            O trânsito é um espaço compartilhado. A regra de ouro estabelecida pelo Código de Trânsito Brasileiro é clara:
+          </p>
+
+          <div style="background:#ECFDF5; border-left:4px solid var(--primary); padding:16px; border-radius:var(--radius-sm); margin-bottom:14px;">
+            <p style="font-style:italic; font-weight:600; color:#065F46; font-size:0.95rem;">
+              "Os veículos de maior porte serão sempre responsáveis pela segurança dos menores, os motorizados pelos não motorizados e, juntos, pela incolumidade do pedestre."
+            </p>
+            <span style="font-size:0.75rem; color:#047857; font-weight:700;">— Artigo 29, § 2º do Código de Trânsito Brasileiro (CTB)</span>
+          </div>
+
+          <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:12px;">
+            Quando você pilota um patinete ou moto, você é responsável pela segurança do ciclista e do pedestre que cruzam seu caminho. Tenha paciência, use a buzina/campainha com moderação e preserve vidas.
+          </p>
+        </div>
+
+        <button class="btn btn-primary btn-sm mt-16" onclick="completeModule(6)">
+          ✓ Concluir Módulo 6
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTÃO FINAL PARA A AVALIAÇÃO -->
+  <div class="text-center mt-32" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-md); padding:28px;">
+    <h3 style="font-family:var(--font-display); font-size:1.3rem; font-weight:800; color:var(--text); margin-bottom:8px;">
+      Pronto para a Avaliação Prática?
+    </h3>
+    <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:20px; max-width:540px; margin-left:auto; margin-right:auto;">
+      Após concluir a leitura dos 6 módulos, responda às situações práticas do dia a dia para conquistar sua Certificação SS e liberar seu QR Code oficial.
+    </p>
+
+    <a href="avaliacao.html" class="btn btn-primary btn-lg" id="btnAvancarAvaliacao" style="opacity:0.5; pointer-events:none;">
+      Fazer Avaliação Prática (Conclua os módulos) →
+    </a>
+  </div>
+
+</main>
+
+<footer class="site-footer" id="site-footer"></footer>
+
+<script type="module">
+  import { renderHeader, renderFooter, showToast } from './assets/js/app.js';
+
+  renderHeader('curso');
+  renderFooter();
+
+  let completedModules = new Set();
+
+  window.toggleModule = function(num) {
+    const body = document.getElementById(`body-mod-${num}`);
+    body.classList.toggle('open');
+  };
+
+  window.completeModule = function(num) {
+    completedModules.add(num);
+
+    // Atualiza status do card
+    const statusEl = document.getElementById(`status-mod-${num}`);
+    statusEl.innerHTML = 'Concluído ✓';
+    statusEl.style.color = 'var(--primary)';
+
+    const card = document.getElementById(`card-mod-${num}`);
+    card.classList.add('completed');
+
+    // Fecha o atual e abre o próximo (se existir)
+    const currentBody = document.getElementById(`body-mod-${num}`);
+    currentBody.classList.remove('open');
+
+    const next = num + 1;
+    if (next <= 6) {
+      const nextBody = document.getElementById(`body-mod-${next}`);
+      nextBody.classList.add('open');
+      document.getElementById(`card-mod-${next}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Atualiza barra de progresso
+    updateProgress();
+    showToast(`Módulo ${num} concluído com sucesso!`, 'success');
+  };
+
+  function updateProgress() {
+    const total = 6;
+    const count = completedModules.size;
+    const pct = (count / total) * 100;
+
+    document.getElementById('progressBar').style.width = `${pct}%`;
+    document.getElementById('progressLabel').textContent = `${count} de ${total} módulos`;
+
+    const btn = document.getElementById('btnAvancarAvaliacao');
+    if (count === total) {
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+      btn.textContent = 'Fazer Avaliação Prática Agora →';
+      showToast('Parabéns! Todos os módulos foram concluídos. Você pode iniciar a avaliação.', 'success', 4500);
+    }
+  }
+</script>
+</body>
+</html>

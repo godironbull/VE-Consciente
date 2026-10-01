@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consulta Pública de Veículo — SS Sustentabilidade & Segurança</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23047857'/><text x='50%' y='68%' font-family='sans-serif' font-weight='900' font-size='50' fill='white' text-anchor='middle'>SS</text></svg>" />
+</head>
+<body>
+
+<header class="site-header" id="site-header"></header>
+
+<main class="main-wrapper public-consult-wrapper">
+
+  <!-- CAMPO DE BUSCA POR ID SS -->
+  <div class="card mb-24" style="padding:18px 20px;">
+    <div style="font-size:0.85rem; font-weight:700; color:var(--text-secondary); margin-bottom:8px;">
+      🔍 Consultar Identificador SS do Veículo:
+    </div>
+    <div style="display:flex; gap:10px;">
+      <input type="text" id="inputSearchId" placeholder="Ex: SS-48291 ou SS-A7F29K" style="text-transform:uppercase; font-family:var(--font-display); font-weight:700;" />
+      <button class="btn btn-primary" onclick="consultarManual()">
+        Consultar
+      </button>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:10px; font-size:0.75rem; color:var(--text-muted); align-items:center; flex-wrap:wrap;">
+      <span>Exemplos para testar:</span>
+      <button onclick="carregarExemplo('SS-48291')" style="background:none; border:1px solid var(--border); padding:2px 8px; border-radius:4px; cursor:pointer;">
+        🟢 SS-48291 (Ativo)
+      </button>
+      <button onclick="carregarExemplo('SS-A7F29K')" style="background:none; border:1px solid #FCA5A5; color:var(--danger); padding:2px 8px; border-radius:4px; cursor:pointer;">
+        🚨 SS-A7F29K (Roubado)
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTAINER DO RESULTADO DA CONSULTA -->
+  <div id="resultadoConsulta">
+    <!-- RENDERIZADO VIA JAVASCRIPT -->
+  </div>
+
+  <!-- AVISO LGPD SOBRE A CONSULTA PÚBLICA -->
+  <div class="alert-box lgpd">
+    <span class="alert-icon">🔒</span>
+    <div>
+      <strong>Proteção da Privacidade (LGPD - Lei nº 13.709/2018):</strong><br>
+      Esta consulta pública tem o objetivo de verificar a <strong>regularidade do veículo</strong> e a existência de <strong>alertas de roubo ou furto</strong>. Os dados pessoais do proprietário (como CPF, telefone e endereço) são estritamente sigilosos e de acesso restrito a órgãos e agentes autorizados.
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer" id="site-footer"></footer>
+
+<script type="module">
+  import {
+    renderHeader, renderFooter, getPublicVehicleData, showToast
+  } from './assets/js/app.js';
+
+  renderHeader('consulta');
+  renderFooter();
+
+  // Lê ID da URL (ex: consulta.html?id=SS-A7F29K)
+  const params = new URLSearchParams(window.location.search);
+  const idFromUrl = params.get('id');
+
+  if (idFromUrl) {
+    document.getElementById('inputSearchId').value = idFromUrl;
+    renderConsulta(idFromUrl);
+  } else {
+    // Carrega um exemplo por padrão se nenhum ID foi passado
+    renderConsulta('SS-48291');
+  }
+
+  window.consultarManual = function() {
+    const val = document.getElementById('inputSearchId').value.trim();
+    if (!val) {
+      showToast('Digite um identificador SS para consultar.', 'warning');
+      return;
+    }
+    renderConsulta(val);
+  };
+
+  window.carregarExemplo = function(id) {
+    document.getElementById('inputSearchId').value = id;
+    renderConsulta(id);
+  };
+
+  function renderConsulta(idSS) {
+    const data = getPublicVehicleData(idSS);
+    const container = document.getElementById('resultadoConsulta');
+
+    if (!data) {
+      container.innerHTML = `
+        <div class="card text-center" style="border:2px dashed var(--border); padding:36px;">
+          <div style="font-size:2.8rem; margin-bottom:8px;">❓</div>
+          <h3 style="font-family:var(--font-display); font-size:1.4rem; color:var(--text); margin-bottom:6px;">
+            Veículo Não Encontrado
+          </h3>
+          <p style="font-size:0.92rem; color:var(--text-secondary); max-width:440px; margin:0 auto 16px;">
+            Não encontramos nenhum registro para o identificador <strong>${idSS.toUpperCase()}</strong>. Verifique se o código foi digitado corretamente.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    const isStolen = data.status === 'ROUBADO_FURTADO';
+
+    if (isStolen) {
+      // 🚨 TELA PÚBLICA DE ALERTA DE ROUBO / FURTO!
+      container.innerHTML = `
+        <div class="vehicle-status-banner stolen">
+          <div style="font-size:3.5rem; margin-bottom:6px;">🚨</div>
+          <span class="status-badge-pill stolen">
+            ⚠️ ALERTA DE SEGURANÇA MÁXIMO
+          </span>
+          <div class="consult-id-tag">${data.idSS}</div>
+          <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; margin:10px 0 6px;">
+            VEÍCULO COM ALERTA DE ROUBO / FURTO ATIVO
+          </h2>
+          <p style="font-size:1rem; opacity:0.95; max-width:540px; margin:0 auto;">
+            O proprietário cadastrou este veículo como roubado, furtado ou subtraído.
+          </p>
+        </div>
+
+        <div class="card mb-24" style="border-left: 6px solid var(--danger);">
+          <h3 style="color:var(--danger); font-size:1.15rem; font-weight:800; margin-bottom:10px;">
+            ⚠️ Instruções de Segurança Obrigatórias:
+          </h3>
+          <ul style="padding-left:20px; font-size:0.92rem; color:var(--text); line-height:1.6; display:flex; flex-direction:column; gap:8px;">
+            <li><strong>NÃO tente abordar ou recuperar o veículo por conta própria.</strong> Sua segurança física vem em primeiro lugar.</li>
+            <li><strong>Acione imediatamente a Polícia Militar (Ligue 190)</strong> ou a <strong>Guarda Municipal</strong> e informe a localização exata onde o veículo se encontra.</li>
+            <li>Informe aos policiais que o veículo possui o identificador oficial <strong>${data.idSS}</strong>.</li>
+          </ul>
+
+          ${data.detalhesRoubo ? `
+            <div style="background:#FFF1F2; border:1px solid #FECDD3; border-radius:var(--radius-sm); padding:14px; margin-top:16px;">
+              <strong style="color:#9F1239; font-size:0.85rem; text-transform:uppercase;">Informações Registradas:</strong>
+              <div style="font-size:0.85rem; color:#881337; margin-top:4px;">
+                ${data.detalhesRoubo.boletimOcorrencia ? `<div>Boletim: ${data.detalhesRoubo.boletimOcorrencia}</div>` : ''}
+                ${data.detalhesRoubo.localAproximado ? `<div>Última Localização Declarada: ${data.detalhesRoubo.localAproximado}</div>` : ''}
+                ${data.detalhesRoubo.observacoes ? `<div>Detalhes: ${data.detalhesRoubo.observacoes}</div>` : ''}
+              </div>
+            </div>
+          ` : ''}
+
+          <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="tel:190" class="btn btn-danger btn-lg">
+              📞 Ligar para a Polícia (190)
+            </a>
+            <button class="btn btn-outline" onclick="enviarInformeLocalizacao('${data.idSS}')">
+              📍 Enviar Informe Anônimo de Localização
+            </button>
+          </div>
+        </div>
+
+        <div class="card mb-24">
+          <div class="card-title">
+            <span>📋</span> Características do Veículo
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; font-size:0.9rem;">
+            <div>Tipo: <strong>${data.tipoLabel || data.tipo}</strong></div>
+            <div>Marca: <strong>${data.marca}</strong></div>
+            <div>Modelo: <strong>${data.modelo}</strong></div>
+            <div>Cor: <strong>${data.cor}</strong></div>
+          </div>
+          ${data.caracteristicas ? `
+            <div style="margin-top:12px; font-size:0.85rem; color:var(--text-secondary); background:#F8FAFC; padding:10px; border-radius:6px;">
+              Detalhes visuais: ${data.caracteristicas}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    } else {
+      // 🟢 TELA PÚBLICA NORMAL / REGULAR!
+      container.innerHTML = `
+        <div class="vehicle-status-banner regular">
+          <div style="font-size:3.2rem; margin-bottom:4px;">✓</div>
+          <span class="status-badge-pill regular">
+            SS — VEÍCULO CADASTRADO NO PROGRAMA
+          </span>
+          <div class="consult-id-tag">${data.idSS}</div>
+          <h2 style="font-family:var(--font-display); font-size:1.5rem; font-weight:800; margin:8px 0 4px;">
+            Situação: Cadastro Ativo e Regular
+          </h2>
+          <p style="font-size:0.92rem; opacity:0.92;">
+            Nenhum alerta de roubo ou furto registrado para este veículo.
+          </p>
+        </div>
+
+        <div class="card mb-24">
+          <div class="card-title">
+            <span>🛴</span> Dados do Veículo
+          </div>
+          <div class="card-subtitle">
+            Informações públicas de identificação física do veículo.
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; font-size:0.92rem;">
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Categoria</span>
+              <div style="font-weight:700; color:var(--text);">${data.tipoLabel || data.tipo}</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Marca / Fabricante</span>
+              <div style="font-weight:700; color:var(--text);">${data.marca}</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Modelo</span>
+              <div style="font-weight:700; color:var(--text);">${data.modelo}</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Cor Predominante</span>
+              <div style="font-weight:700; color:var(--text);">${data.cor}</div>
+            </div>
+          </div>
+
+          ${data.caracteristicas ? `
+            <div style="margin-top:14px; font-size:0.88rem; color:var(--text-secondary); background:#F8FAFC; border:1px solid var(--border); padding:12px; border-radius:var(--radius-sm);">
+              <strong>Identificação Visual:</strong> ${data.caracteristicas}
+            </div>
+          ` : ''}
+
+          <div class="alert-box green mt-16" style="margin-bottom:0;">
+            <span class="alert-icon">🌱</span>
+            <div>
+              <strong>Condutor Consciente:</strong> Este veículo faz parte do programa SS Sustentabilidade & Segurança, promovendo trânsito humanizado e respeito mútuo.
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  window.enviarInformeLocalizacao = function(idSS) {
+    const loc = prompt(`Informe o local ou ponto de referência onde você avistou o veículo ${idSS}:`);
+    if (loc && loc.trim()) {
+      showToast('Obrigado! Seu informe anônimo foi registrado no sistema para apoio às autoridades.', 'success', 5000);
+    }
+  };
+</script>
+</body>
+</html>
