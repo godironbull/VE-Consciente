@@ -1,6 +1,53 @@
 [build]
   publish = "."
 
+# URLs Limpas (Pretty URLs) - remove .html e index.html automaticamente
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cadastro"
+  to = "/cadastro.html"
+  status = 200
+
+[[redirects]]
+  from = "/curso"
+  to = "/curso.html"
+  status = 200
+
+[[redirects]]
+  from = "/avaliacao"
+  to = "/avaliacao.html"
+  status = 200
+
+[[redirects]]
+  from = "/certificado"
+  to = "/certificado.html"
+  status = 200
+
+[[redirects]]
+  from = "/meu-ss"
+  to = "/meu-ss.html"
+  status = 200
+
+[[redirects]]
+  from = "/consulta"
+  to = "/consulta.html"
+  status = 200
+
+[[redirects]]
+  from = "/agentes"
+  to = "/agentes.html"
+  status = 200
+
+[[redirects]]
+  from = "/palestras"
+  to = "/palestras.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]

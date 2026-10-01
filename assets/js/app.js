@@ -284,9 +284,9 @@ export function clearOnboardingData() {
 
 // ── RESOLUÇÃO DO LINK DO QR CODE ───────────────────────────────────────────
 export function getQRCodeUrl(idSS) {
-  // Constrói URL pública absoluta para o consulta.html
-  const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
-  return `${base}/consulta.html?id=${encodeURIComponent(idSS)}`;
+  // Constrói URL pública limpa (sem .html) para consulta
+  const base = window.location.origin;
+  return `${base}/consulta?id=${encodeURIComponent(idSS)}`;
 }
 
 // ── NOTIFICAÇÕES TOAST ─────────────────────────────────────────────────────
@@ -357,7 +357,7 @@ export function renderHeader(activePage = '') {
 
   el.innerHTML = `
     <div class="header-container">
-      <a href="index.html" class="brand-logo">
+      <a href="/" class="brand-logo">
         <div class="brand-emblem">SS</div>
         <div class="brand-info">
           <div class="brand-title"><span class="s1">Sustentabilidade</span> & <span class="s2">Segurança</span></div>
@@ -368,31 +368,45 @@ export function renderHeader(activePage = '') {
       <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Abrir Menu">☰</button>
 
       <nav class="nav-links" id="navLinks">
-        <a href="index.html" class="nav-item ${activePage === 'home' ? 'active' : ''}">Início</a>
-        <a href="index.html#proposta" class="nav-item">O Projeto</a>
-        <a href="curso.html" class="nav-item ${activePage === 'curso' ? 'active' : ''}">Curso Online</a>
-        <a href="consulta.html" class="nav-item ${activePage === 'consulta' ? 'active' : ''}">🔍 Consultar Veículo</a>
-        <a href="palestras.html" class="nav-item ${activePage === 'palestras' ? 'active' : ''}">Palestras & Parcerias</a>
+        <a href="/" class="nav-item ${activePage === 'home' ? 'active' : ''}">Início</a>
+        <a href="/#proposta" class="nav-item" id="navLinkProposta">O Projeto</a>
+        <a href="/curso" class="nav-item ${activePage === 'curso' ? 'active' : ''}">Curso Online</a>
+        <a href="/consulta" class="nav-item ${activePage === 'consulta' ? 'active' : ''}">🔍 Consultar Veículo</a>
+        <a href="/palestras" class="nav-item ${activePage === 'palestras' ? 'active' : ''}">Palestras & Parcerias</a>
         
         ${currentUser ? `
-          <a href="meu-ss.html" class="nav-item nav-cta ${activePage === 'meu-ss' ? 'active' : ''}">
+          <a href="/meu-ss" class="nav-item nav-cta ${activePage === 'meu-ss' ? 'active' : ''}">
             👤 Meu SS (${currentUser.nome.split(' ')[0]})
           </a>
         ` : `
-          <a href="cadastro.html" class="nav-item nav-cta ${activePage === 'cadastro' ? 'active' : ''}">
+          <a href="/cadastro" class="nav-item nav-cta ${activePage === 'cadastro' ? 'active' : ''}">
             🚀 Cadastrar-se
           </a>
-          <a href="meu-ss.html" class="nav-item ${activePage === 'meu-ss' ? 'active' : ''}">
+          <a href="/meu-ss" class="nav-item ${activePage === 'meu-ss' ? 'active' : ''}">
             Entrar
           </a>
         `}
 
-        <a href="agentes.html" class="nav-item nav-agent ${activePage === 'agentes' ? 'active' : ''}">
+        <a href="/agentes" class="nav-item nav-agent ${activePage === 'agentes' ? 'active' : ''}">
           ${currentAgent ? `🚔 Painel ${currentAgent.orgao}` : '🔒 Agentes'}
         </a>
       </nav>
     </div>
   `;
+
+  // Intercepta clique em "O Projeto" para rolar suave sem deixar #proposta na barra de URL
+  const linkProposta = document.getElementById('navLinkProposta');
+  if (linkProposta) {
+    linkProposta.addEventListener('click', (e) => {
+      const secao = document.getElementById('proposta');
+      if (secao) {
+        e.preventDefault();
+        secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Mantém a barra de endereço limpa (sem #proposta)
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    });
+  }
 
   // Toggle do menu mobile
   const toggle = document.getElementById('mobileNavToggle');
@@ -429,21 +443,21 @@ export function renderFooter() {
       <div class="footer-col">
         <h5>Navegação</h5>
         <ul>
-          <li><a href="index.html">Página Inicial</a></li>
-          <li><a href="cadastro.html">Cadastrar Veículo</a></li>
-          <li><a href="curso.html">Curso Online & Módulos</a></li>
-          <li><a href="meu-ss.html">Área do Usuário (Meu SS)</a></li>
-          <li><a href="consulta.html">Consulta Pública de QR Code</a></li>
+          <li><a href="/">Página Inicial</a></li>
+          <li><a href="/cadastro">Cadastrar Veículo</a></li>
+          <li><a href="/curso">Curso Online & Módulos</a></li>
+          <li><a href="/meu-ss">Área do Usuário (Meu SS)</a></li>
+          <li><a href="/consulta">Consulta Pública de QR Code</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h5>Institucional</h5>
         <ul>
-          <li><a href="palestras.html">Palestras Presenciais</a></li>
-          <li><a href="palestras.html#parcerias">Parcerias com Municípios</a></li>
-          <li><a href="agentes.html">Área para Agentes Autorizados</a></li>
-          <li><a href="palestras.html#publicidade">Espaço para Apoiadores</a></li>
+          <li><a href="/palestras">Palestras Presenciais</a></li>
+          <li><a href="/palestras#parcerias">Parcerias com Municípios</a></li>
+          <li><a href="/agentes">Área para Agentes Autorizados</a></li>
+          <li><a href="/palestras#publicidade">Espaço para Apoiadores</a></li>
         </ul>
       </div>
 
