@@ -347,7 +347,7 @@ export function isUnderAge(birthDateString) {
   return age < 18;
 }
 
-// ── RENDERIZAÇÃO DE HEADER E FOOTER PADRÃO ──────────────────────────────────
+// ── RENDERIZAÇÃO DE HEADER E FOOTER PADRÃO (MOBILE-FIRST) ───────────────────
 export function renderHeader(activePage = '') {
   const el = document.getElementById('site-header');
   if (!el) return;
@@ -357,7 +357,7 @@ export function renderHeader(activePage = '') {
 
   el.innerHTML = `
     <div class="header-container">
-      <a href="/" class="brand-logo">
+      <a href="/" class="brand-logo" aria-label="Página Inicial do SS">
         <div class="brand-emblem">SS</div>
         <div class="brand-info">
           <div class="brand-title"><span class="s1">Sustentabilidade</span> & <span class="s2">Segurança</span></div>
@@ -365,14 +365,43 @@ export function renderHeader(activePage = '') {
         </div>
       </a>
 
-      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Abrir Menu">☰</button>
+      <!-- Botão Hambúrguer Animado Touch-Friendly -->
+      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Abrir Menu de Navegação" aria-expanded="false" aria-controls="navLinks">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
 
-      <nav class="nav-links" id="navLinks">
-        <a href="/" class="nav-item ${activePage === 'home' ? 'active' : ''}">Início</a>
-        <a href="/#proposta" class="nav-item" id="navLinkProposta">O Projeto</a>
-        <a href="/curso" class="nav-item ${activePage === 'curso' ? 'active' : ''}">Curso Online</a>
-        <a href="/consulta" class="nav-item ${activePage === 'consulta' ? 'active' : ''}">🔍 Consultar Veículo</a>
-        <a href="/palestras" class="nav-item ${activePage === 'palestras' ? 'active' : ''}">Palestras & Parcerias</a>
+      <!-- Backdrop Escuro para fechar ao tocar fora -->
+      <div class="nav-backdrop" id="navBackdrop"></div>
+
+      <!-- Drawer de Navegação Responsiva -->
+      <nav class="nav-links" id="navLinks" role="navigation" aria-label="Menu Principal">
+        <div class="nav-drawer-header">
+          <div class="brand-logo">
+            <div class="brand-emblem">SS</div>
+            <div class="brand-info">
+              <div class="brand-title"><span class="s1">Menu</span> SS</div>
+            </div>
+          </div>
+          <button class="nav-drawer-close" id="navDrawerClose" aria-label="Fechar Menu">✕</button>
+        </div>
+
+        <a href="/" class="nav-item ${activePage === 'home' ? 'active' : ''}">
+          <span>🏠</span> Início
+        </a>
+        <a href="/#proposta" class="nav-item" id="navLinkProposta">
+          <span>🔄</span> O Projeto
+        </a>
+        <a href="/curso" class="nav-item ${activePage === 'curso' ? 'active' : ''}">
+          <span>📚</span> Curso Online
+        </a>
+        <a href="/consulta" class="nav-item ${activePage === 'consulta' ? 'active' : ''}">
+          <span>🔍</span> Consultar Veículo
+        </a>
+        <a href="/palestras" class="nav-item ${activePage === 'palestras' ? 'active' : ''}">
+          <span>🤝</span> Palestras & Parcerias
+        </a>
         
         ${currentUser ? `
           <a href="/meu-ss" class="nav-item nav-cta ${activePage === 'meu-ss' ? 'active' : ''}">
@@ -383,12 +412,12 @@ export function renderHeader(activePage = '') {
             🚀 Cadastrar-se
           </a>
           <a href="/meu-ss" class="nav-item ${activePage === 'meu-ss' ? 'active' : ''}">
-            Entrar
+            🔑 Entrar no Meu SS
           </a>
         `}
 
         <a href="/agentes" class="nav-item nav-agent ${activePage === 'agentes' ? 'active' : ''}">
-          ${currentAgent ? `🚔 Painel ${currentAgent.orgao}` : '🔒 Agentes'}
+          ${currentAgent ? `🚔 Painel ${currentAgent.orgao}` : '🔒 Área de Agentes'}
         </a>
       </nav>
     </div>
@@ -401,19 +430,59 @@ export function renderHeader(activePage = '') {
       const secao = document.getElementById('proposta');
       if (secao) {
         e.preventDefault();
+        closeMobileMenu();
         secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Mantém a barra de endereço limpa (sem #proposta)
         window.history.replaceState(null, '', window.location.pathname);
       }
     });
   }
 
-  // Toggle do menu mobile
+  // Controles do Menu Mobile
   const toggle = document.getElementById('mobileNavToggle');
   const links = document.getElementById('navLinks');
+  const backdrop = document.getElementById('navBackdrop');
+  const closeBtn = document.getElementById('navDrawerClose');
+
+  function openMobileMenu() {
+    toggle?.classList.add('is-active');
+    toggle?.setAttribute('aria-expanded', 'true');
+    links?.classList.add('mobile-open');
+    backdrop?.classList.add('is-active');
+    document.body.classList.add('nav-locked');
+  }
+
+  function closeMobileMenu() {
+    toggle?.classList.remove('is-active');
+    toggle?.setAttribute('aria-expanded', 'false');
+    links?.classList.remove('mobile-open');
+    backdrop?.classList.remove('is-active');
+    document.body.classList.remove('nav-locked');
+  }
+
   if (toggle && links) {
     toggle.addEventListener('click', () => {
-      links.classList.toggle('mobile-open');
+      if (links.classList.contains('mobile-open')) {
+        closeMobileMenu();
+      } else {
+        openMobileMenu();
+      }
+    });
+
+    backdrop?.addEventListener('click', closeMobileMenu);
+    closeBtn?.addEventListener('click', closeMobileMenu);
+
+    // Fecha menu ao clicar em qualquer link de navegação
+    links.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        closeMobileMenu();
+      });
+    });
+
+    // Fecha ao pressionar ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && links.classList.contains('mobile-open')) {
+        closeMobileMenu();
+      }
     });
   }
 }
