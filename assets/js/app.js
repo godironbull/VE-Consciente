@@ -402,6 +402,12 @@ export function renderHeader(activePage = '') {
         <a href="/palestras" class="nav-item ${activePage === 'palestras' ? 'active' : ''}">
           <span class="nav-icon">🤝</span>Parcerias
         </a>
+        <a href="/loja.html" class="nav-item ${activePage === 'loja' ? 'active' : ''}">
+          <span class="nav-icon">🛒</span>Loja / Vendas
+        </a>
+        <a href="/anuncie.html" class="nav-item ${activePage === 'anuncie' ? 'active' : ''}">
+          <span class="nav-icon">📢</span>Anuncie Aqui
+        </a>
 
         <div class="nav-divider"></div>
 
@@ -528,7 +534,8 @@ export function renderFooter() {
           <li><a href="/palestras">Palestras Presenciais</a></li>
           <li><a href="/palestras#parcerias">Parcerias com Municípios</a></li>
           <li><a href="/agentes">Área para Agentes Autorizados</a></li>
-          <li><a href="/palestras#publicidade">Espaço para Apoiadores</a></li>
+          <li><a href="/anuncie.html">Anuncie Aqui / Patrocínios</a></li>
+          <li><a href="/loja.html">Loja SS Oficial</a></li>
         </ul>
       </div>
 

@@ -14,29 +14,53 @@
 
 <main class="main-wrapper wide">
 
-  <!-- HERO PRINCIPAL -->
-  <section class="hero-banner">
-    <div class="hero-badge">
-      <span>🛡️ Sustentabilidade & Segurança no Trânsito</span>
+  <!-- HERO PRINCIPAL (CARROSSEL) -->
+  <section class="hero-carousel-container" style="position: relative; overflow: hidden; border-radius: var(--radius-lg); margin-bottom: 24px;">
+    
+    <!-- SLIDE 1 (Principal) -->
+    <div class="hero-banner carousel-slide" id="slide-1" style="transition: opacity 0.8s ease-in-out; margin-bottom: 0;">
+      <div class="hero-badge">
+        <span>🛡️ Sustentabilidade & Segurança no Trânsito</span>
+      </div>
+      <h1 class="hero-title">
+        Educação, Conscientização e Identificação Inteligente de Veículos de Duas Rodas
+      </h1>
+      <p class="hero-description">
+        Uma solução integrada para <strong>motociclistas e usuários de veículos elétricos e autopropelidos</strong>.
+        Aprenda a circular com segurança, obtenha sua certificação e proteja seu veículo com a identificação digital por <strong>QR Code (sem expor seus dados pessoais)</strong>.
+      </p>
+      <div class="hero-actions">
+        <a href="/cadastro" class="btn btn-light btn-lg">
+          🚀 Cadastrar e Iniciar Curso
+        </a>
+        <a href="/consulta" class="btn btn-outline-white btn-lg">
+          🔍 Consultar QR Code de Veículo
+        </a>
+        <a href="/meu-ss" class="btn btn-outline-white">
+          👤 Acessar Meu SS
+        </a>
+      </div>
     </div>
-    <h1 class="hero-title">
-      Educação, Conscientização e Identificação Inteligente de Veículos de Duas Rodas
-    </h1>
-    <p class="hero-description">
-      Uma solução integrada para <strong>motociclistas e usuários de veículos elétricos e autopropelidos</strong>.
-      Aprenda a circular com segurança, obtenha sua certificação e proteja seu veículo com a identificação digital por <strong>QR Code (sem expor seus dados pessoais)</strong>.
-    </p>
-    <div class="hero-actions">
-      <a href="/cadastro" class="btn btn-light btn-lg">
-        🚀 Cadastrar e Iniciar Curso
-      </a>
-      <a href="/consulta" class="btn btn-outline-white btn-lg">
-        🔍 Consultar QR Code de Veículo
-      </a>
-      <a href="/meu-ss" class="btn btn-outline-white">
-        👤 Acessar Meu SS
-      </a>
+
+    <!-- SLIDE 2 (Anúncio) -->
+    <div class="hero-banner carousel-slide" id="slide-2" style="background: linear-gradient(135deg, #1E40AF 0%, #1e3a8a 100%); position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; margin-bottom: 0; padding: 40px 20px; box-sizing: border-box; z-index: 2; pointer-events: none;">
+      <div style="font-size:3rem; margin-bottom:16px;">📢</div>
+      <h1 class="hero-title" style="margin-bottom: 16px;">
+        Coloque Seu Anúncio Aqui
+      </h1>
+      <p class="hero-description" style="max-width: 700px; margin-bottom: 30px;">
+        Apoie a educação no trânsito e exiba sua marca para milhares de motociclistas e usuários de veículos elétricos na sua região.
+      </p>
+      <div class="hero-actions" style="justify-content: center;">
+        <a href="/anuncie.html" class="btn btn-light btn-lg" style="pointer-events: auto;">
+          Ver Planos de Patrocínio →
+        </a>
+      </div>
     </div>
+
+    <!-- SETAS DE NAVEGAÇÃO -->
+    <button id="carousel-prev" style="position: absolute; top: 50%; left: 16px; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 1.4rem; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">&#10094;</button>
+    <button id="carousel-next" style="position: absolute; top: 50%; right: 16px; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 1.4rem; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">&#10095;</button>
   </section>
 
   <!-- ESTATÍSTICAS DA PLATAFORMA -->
@@ -358,6 +382,8 @@
     </div>
   </section>
 
+
+
   <!-- PALESTRAS PRESENCIAIS, PARCERIAS E PUBLICIDADE -->
   <section class="card mb-24" style="background:linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);">
     <div class="card-title">🤝 Palestras Presenciais, Parcerias & Apoiadores</div>
@@ -416,7 +442,7 @@
 <footer class="site-footer" id="site-footer"></footer>
 
 <script type="module">
-  import { renderHeader, renderFooter, getDB } from './assets/js/app.js';
+  import { renderHeader, renderFooter, getDB } from './assets/js/app.js?v=3';
 
   renderHeader('home');
   renderFooter();
@@ -427,6 +453,66 @@
   document.getElementById('stat-veiculos').textContent = db.veiculos.length;
   document.getElementById('stat-eletricos').textContent = db.veiculos.filter(v => v.tipo === 'patinete' || v.tipo === 'bike').length;
   document.getElementById('stat-alertas').textContent = db.veiculos.filter(v => v.status === 'ROUBADO_FURTADO').length;
+
+  // Lógica do Carrossel do Hero
+  let currentSlide = 1;
+  let carouselInterval;
+  const slide1 = document.getElementById('slide-1');
+  const slide2 = document.getElementById('slide-2');
+  const carouselContainer = document.querySelector('.hero-carousel-container');
+  const btnPrev = document.getElementById('carousel-prev');
+  const btnNext = document.getElementById('carousel-next');
+
+  function updateSlide(targetSlide) {
+    if (!slide1 || !slide2) return;
+    if (targetSlide === 1) {
+      slide1.style.opacity = '1';
+      slide1.style.pointerEvents = 'auto';
+      slide2.style.opacity = '0';
+      slide2.style.pointerEvents = 'none';
+      currentSlide = 1;
+    } else {
+      slide1.style.opacity = '0';
+      slide1.style.pointerEvents = 'none';
+      slide2.style.opacity = '1';
+      slide2.style.pointerEvents = 'auto';
+      currentSlide = 2;
+    }
+  }
+
+  function nextSlide() {
+    updateSlide(currentSlide === 1 ? 2 : 1);
+  }
+
+  function prevSlide() {
+    updateSlide(currentSlide === 1 ? 2 : 1);
+  }
+
+  function startCarousel() {
+    carouselInterval = setInterval(nextSlide, 10000);
+  }
+
+  function stopCarousel() {
+    clearInterval(carouselInterval);
+  }
+
+  if (carouselContainer) {
+    carouselContainer.addEventListener('mouseenter', stopCarousel);
+    carouselContainer.addEventListener('mouseleave', startCarousel);
+  }
+
+  if (btnPrev) {
+    btnPrev.addEventListener('click', prevSlide);
+    btnPrev.addEventListener('mouseenter', () => btnPrev.style.background = 'rgba(0,0,0,0.8)');
+    btnPrev.addEventListener('mouseleave', () => btnPrev.style.background = 'rgba(0,0,0,0.4)');
+  }
+  if (btnNext) {
+    btnNext.addEventListener('click', nextSlide);
+    btnNext.addEventListener('mouseenter', () => btnNext.style.background = 'rgba(0,0,0,0.8)');
+    btnNext.addEventListener('mouseleave', () => btnNext.style.background = 'rgba(0,0,0,0.4)');
+  }
+
+  startCarousel();
 </script>
 </body>
 </html>
